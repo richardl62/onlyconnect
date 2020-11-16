@@ -3,29 +3,29 @@ import React, { FC } from 'react';
 
 interface CoreSquare {
     clue: string;
-    index: number;
     selected: boolean;
     solvedGroup: number | null;
 };
 
 interface SquareProps {
-    readonly coreSquare: CoreSquare;
+    coreSquare: CoreSquare;
+    index: number;
     onChange?: (index: number, word: string) => void;
     onSelect?: (index:number) => void;
 }
 
-const Square : FC<SquareProps> = ({coreSquare, onChange, onSelect}: SquareProps) => {
+const Square : FC<SquareProps> = ({coreSquare, index, onChange, onSelect}: SquareProps) => {
   
     if (onChange) {
         const onClueChange: (event: any) => void = (event) => {
-            onChange(coreSquare.index, event.target.value)
+            onChange(index, event.target.value)
         };
 
         return (<input type="text" value={coreSquare.clue} onChange={onClueChange} />);
     }
     else if (onSelect) {
         const onClick: () => void = () => {
-            onSelect(coreSquare.index)
+            onSelect(index)
         };
         
         let className="square";
@@ -53,17 +53,20 @@ const Square : FC<SquareProps> = ({coreSquare, onChange, onSelect}: SquareProps)
 
 interface WallProps {
     coreSquares: Array<CoreSquare>,
-    clueChange?: (index: number, clue: string) => void,
-    clueSelected?: (index: number) => void,
+    onChange?: (index: number, clue: string) => void,
+    onSelect?: (index: number) => void,
 };
 
-const Wall: FC<WallProps> = ({ coreSquares, clueChange, clueSelected }: WallProps) => {
+const Wall: FC<WallProps> = ({ coreSquares, onChange, onSelect }: WallProps) => {
     return (
         <div className="wall">
             {coreSquares.map((cs: CoreSquare, index: number) => (
-                <Square key={index.toString()} coreSquare={cs}
-                    onChange={clueChange}
-                    onSelect={clueSelected}
+                <Square 
+                    key={index.toString()} 
+                    index={index}
+                    coreSquare={cs}
+                    onChange={onChange}
+                    onSelect={onSelect}
                 />
             ))}
         </div>

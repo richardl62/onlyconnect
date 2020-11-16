@@ -12,58 +12,103 @@ function shuffleArray<T>(array: Array<T>) {
   return array;
 }
 
-const startingClues = [
-  'a1.1', 'a2', 'a3', 'a4',
+let startingClues: Array<string>;
+startingClues = [
+  'a1', 'a2', 'a3', 'a4',
   'b1', 'b2', 'b3', 'b4',
   'c1', 'c2', 'c3', 'c4',
-  'longlonglong', 'd2', 'd3', 'd4',
+  'd1 longlonglong', 'd2', 'd3', 'd4',
 ];
 
-const startingState = startingClues.map((clue: string, index: number) => {
-  return {
-    clue: clue,
-    index: index,
-    answerGroup: index / 4,
-    selected: false,
-    solvedGroup: null,
-  };
-});
+const groupSize = 4;
+const nGroups = 4;
 
-interface AppProps {};
-const App: FC<AppProps> = () => {
 
-    const [state, setState] = useState(startingState);
-    const [wordsEntered, setWordsEntered] = useState(false);
+class CoreSquare {
+  readonly answerGroup: number;
+  clue = "";
+  selected = false; 
+  solvedGroup: number | null = null;
 
-  if (!wordsEntered) {
-    const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
-      let newState = [...state];
-      newState[index] = {...newState[index], clue:newClue};
-      setState(newState);
+  constructor(answerGroup: number) {
+    this.answerGroup = answerGroup;
+  }
+};
+
+function startingCoreSquares() {
+    let squares: Array<CoreSquare> = [];
+    
+    for(let groupNo = 0; groupNo < nGroups; ++groupNo) {
+      for(let n = 0; n < groupSize; ++n) {
+        let s = new CoreSquare(groupNo);
+        squares.push(s);
+
+        // To help with testing
+        if(startingClues) {
+          s.clue = startingClues[n + groupNo * groupSize];
+        }
+      }
     }
 
-    const finishedEnteringWords: () => void = () => {
-      setState(shuffleArray([...state]));
-      setWordsEntered(true);
-    }
+    return squares;
+}
 
+
+const App: FC<{}> = () => {
+
+  const [coreSquares, setCoreSquares] = useState(startingCoreSquares);
+  const [wordsEntered, setWordsEntered] = useState(false);
+  const [lastSolvedGroup, setLastSolvedGroup] = useState(0);
+
+  const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
+    let newSquares = [...coreSquares];
+    newSquares[index].clue = newClue;
+    setCoreSquares(newSquares);
+  }
+
+  const finishedEnteringWords: () => void = () => {
+    setCoreSquares(shuffleArray([...coreSquares]));
+    setWordsEntered(true);
+  }
+
+  const clueSelected: (index: number) => void = (index) => {
+
+    if(!coreSquares[index].solvedGroup) {
+      let squares = [...coreSquares];
+      squares[index].selected = !squares[index].selected;
+
+      let selected = squares.filter(cs => cs.selected);
+      if( selected.length === groupSize ) {
+        selected.forEach(s =>{
+          s.selected = false;
+          if (s.solvedGroup) {
+            throw new Error("Selected square is already solved");
+          }
+        });
+
+        if (selected.every(s => s.answerGroup === selected[0].answerGroup)) {
+          const solvedGroup = lastSolvedGroup + 1;
+          setLastSolvedGroup(solvedGroup);
+          selected.forEach(s => {
+            s.solvedGroup = solvedGroup;
+          });
+        }
+      }
+
+      setCoreSquares(squares);
+    }
+  }
+
+  if (wordsEntered) {
+    return (<Wall coreSquares={coreSquares} onSelect={clueSelected}/>);
+  } else {
     return (<>
       <div>Enter clues then press 'Done'</div>
-      <Wall coreSquares={state} clueChange={clueChange} />
+      <Wall coreSquares={coreSquares} onChange={clueChange} />
       <button type="button" onClick={finishedEnteringWords}>Done</button>
     </>
     );
-  } else {
-
-    const clueSelected: (index: number) => void = (index) => {
-      console.log(`clue selected :`, index);
-      let newState = [...state];
-      newState[index] = {...newState[index], selected: !newState[index].selected};
-      setState(newState);
-    }
-
-    return <Wall coreSquares={state} clueSelected={clueSelected}/>
   }
+};
 
-}
 export default App;

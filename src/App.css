@@ -11,3 +11,15 @@
 .selected {
   color: red;
 }
+
+.group1 {
+  background-color: cornsilk;
+}
+
+.group2 {
+  background-color: red;
+}
+
+.group3 {
+  background-color: green;
+}
