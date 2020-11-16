@@ -1,8 +1,9 @@
 .wall {
   display: grid;
-  grid-template-columns: fit-content(20px) fit-content(20px) fit-content(20px) fit-content(20px);
+  grid-template-columns: repeat(4, minmax(6em,max-content));
 }
 
-.wall input {
+.wall > * {
   width: auto;
+  border: 1px black solid;
 }
