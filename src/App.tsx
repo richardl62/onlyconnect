@@ -1,8 +1,8 @@
 import React, { FC, useState} from 'react';
-
+import { Clue } from './clue';
 import './App.css';
 
-const Startingwords = [
+const startingWords = [
   'a1', 'a2', 'a3', 'a4',
   'b1', 'b2', 'b3', 'b4',
   'c1', 'c2', 'c3', 'c4',
@@ -10,29 +10,24 @@ const Startingwords = [
 ];
 
 
-interface AppProps {};
 
+interface AppProps {};
 const App: FC<AppProps> = () => {
 
-    const [words, setWords] = useState(Startingwords);
+    const [clues, setClues] = useState(startingWords);
 
-    const handleChange: (event: any) => void = (event) => {
-      const {name, value} = event.target;
-      const index = parseInt(name);
-
-      let newWords = [...words];
-      newWords[index] = value;
-      setWords(newWords);
+    const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
+      let newClues = [...clues];
+      newClues[index] = newClue;
+      setClues(newClues);
     }
+
     return (
       <div className="wall">
-        {words.map((word, index) => (
-          <input type="text" 
-            value={word} 
-            key={index.toString()}
-            name={index.toString()}
-            onChange={handleChange} 
-          />
+        {clues.map((clue, index) => (
+            <div key={index.toString()}> 
+              <Clue clue={clue} index={index} onChange={clueChange} />
+            </div> 
          ))}
       </div>
     );

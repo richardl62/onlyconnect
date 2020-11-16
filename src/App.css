@@ -1,5 +1,8 @@
 .wall {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: fit-content(20px) fit-content(20px) fit-content(20px) fit-content(20px);
 }
 
+.wall input {
+  width: auto;
+}
