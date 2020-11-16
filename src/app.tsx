@@ -1,5 +1,5 @@
 import React, { FC, useState} from 'react';
-import { Clue } from './clue';
+import Wall  from './wall';
 import './App.css';
 
 // Shuffle array in place. Return the shuffled array
@@ -22,39 +22,18 @@ const startingClues = [
 const startingState = startingClues.map((clue: string, index: number) => {
   return {
     clue: clue,
-    group: index / 4,
+    index: index,
+    answerGroup: index / 4,
+    selected: false,
+    solvedGroup: null,
   };
 });
-
-type State = typeof startingState[0];
-
-interface InputWallProps {
-  state: Array<State>, 
-  clueChange?: (index: number, clue: string) => void, 
-  clueSelected?: (index: number) => void, 
-};
-
-const Wall: FC<InputWallProps> = ({ state, clueChange, clueSelected}: InputWallProps) => {
-  return (
-    <div className="wall">
-      {state.map((s: State, index: number) => (
-        <Clue key={index.toString()} clue={s.clue} index={index} 
-          onChange={clueChange}
-          onSelect={clueSelected}
-          />
-      ))}
-    </div>
-  );
-}
 
 interface AppProps {};
 const App: FC<AppProps> = () => {
 
     const [state, setState] = useState(startingState);
     const [wordsEntered, setWordsEntered] = useState(false);
-
-
-    
 
   if (!wordsEntered) {
     const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
@@ -70,7 +49,7 @@ const App: FC<AppProps> = () => {
 
     return (<>
       <div>Enter clues then press 'Done'</div>
-      <Wall state={state} clueChange={clueChange} />
+      <Wall coreSquares={state} clueChange={clueChange} />
       <button type="button" onClick={finishedEnteringWords}>Done</button>
     </>
     );
@@ -78,9 +57,12 @@ const App: FC<AppProps> = () => {
 
     const clueSelected: (index: number) => void = (index) => {
       console.log(`clue selected :`, index);
+      let newState = [...state];
+      newState[index] = {...newState[index], selected: !newState[index].selected};
+      setState(newState);
     }
 
-    return <Wall state={state} clueSelected={clueSelected}/>
+    return <Wall coreSquares={state} clueSelected={clueSelected}/>
   }
 
 }
