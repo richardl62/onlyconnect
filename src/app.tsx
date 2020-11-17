@@ -23,6 +23,9 @@ startingClues = [
 const groupSize = 4;
 const nGroups = 4;
 
+function groupFromIndex(index: number) {
+  return Math.floor(index/groupSize) + 1;
+}
 
 class CoreSquare {
   readonly answerGroup: number;
@@ -53,6 +56,42 @@ function startingCoreSquares() {
     return squares;
 }
 
+// Check that 
+// - Squares in solved groups below 'groupBeingProcessed' are correctly placed
+// = No square is in a solved group greated than  'groupBeingProcessed'
+// Throw an error the if check fails.
+function sanityCheckSolvedGroups(squares: Array<CoreSquare>, groupBeingProcessed: number) {
+  for (let index = 0; index < squares.length; ++index) {
+    const positional = groupFromIndex(index);
+    const current = squares[index].solvedGroup;
+    if(positional < groupBeingProcessed) {
+        if(positional !== current) {
+          throw new Error(`square ${index} is not in solved group ${positional}`)
+        }
+
+        if (current > groupBeingProcessed) {
+          throw new Error(`square ${index} is in unexpected solved fron ${current}`)
+        }
+    }
+  }
+}
+
+function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: number) {
+
+  sanityCheckSolvedGroups(squares, groupNo);
+
+  // Relies on properties cheched above. 
+  for (let index = 0; index < squares.length; ++index) {
+    const sq = squares[index];
+    if (sq.solvedGroup === groupNo && groupFromIndex(index) !== groupNo) {
+      const moveTo = squares.findIndex(s => !s.solvedGroup); // Inefficient
+      if (groupFromIndex(moveTo) !== groupNo) {
+        throw new Error("Bah! Something has gone wrong");
+      }
+      [squares[index], squares[moveTo]] = [squares[moveTo], squares[index]];
+    }
+  }
+}
 
 const App: FC<{}> = () => {
 
@@ -73,25 +112,36 @@ const App: FC<{}> = () => {
 
   const clueSelected: (index: number) => void = (index) => {
 
+    // Ignore squares that have already been solved.
     if(!coreSquares[index].solvedGroup) {
       let squares = [...coreSquares];
       squares[index].selected = !squares[index].selected;
 
       let selected = squares.filter(cs => cs.selected);
+      if(selected.find(s => s.solvedGroup)) {
+        throw new Error("Selected square is already solved");
+      }
+
       if( selected.length === groupSize ) {
-        selected.forEach(s =>{
-          s.selected = false;
-          if (s.solvedGroup) {
-            throw new Error("Selected square is already solved");
-          }
-        });
+        selected.forEach(s => s.selected = false);
 
         if (selected.every(s => s.answerGroup === selected[0].answerGroup)) {
           const solvedGroup = lastSolvedGroup + 1;
           setLastSolvedGroup(solvedGroup);
-          selected.forEach(s => {
-            s.solvedGroup = solvedGroup;
-          });
+
+          selected.forEach(s => s.solvedGroup = solvedGroup);
+          positionSquaresInSolvedGroup(squares, solvedGroup);
+
+           // If the last but one group has been solve, then the last group 
+          // must also be solved.
+          if(solvedGroup + 1 === nGroups) {
+            squares.forEach(s => {
+              if(!s.solvedGroup) {
+                s.solvedGroup = nGroups;
+              }
+            })
+            setLastSolvedGroup(nGroups);
+          }
         }
       }
 
