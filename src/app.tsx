@@ -22,6 +22,7 @@ startingClues = [
 
 const groupSize = 4;
 const nGroups = 4;
+const nSquares = groupSize * nGroups;
 
 function groupFromIndex(index: number) {
   return Math.floor(index/groupSize) + 1;
@@ -29,32 +30,119 @@ function groupFromIndex(index: number) {
 
 class CoreSquare {
   readonly answerGroup: number;
-  clue = "";
+  clue: string;
   selected = false; 
   solvedGroup: number | null = null;
 
-  constructor(answerGroup: number) {
+  constructor(answerGroup: number, clue="") {
     this.answerGroup = answerGroup;
+    this.clue = clue;
   }
 };
 
-function startingCoreSquares() {
-    let squares: Array<CoreSquare> = [];
-    
-    for(let groupNo = 0; groupNo < nGroups; ++groupNo) {
-      for(let n = 0; n < groupSize; ++n) {
-        let s = new CoreSquare(groupNo);
-        squares.push(s);
 
-        // To help with testing
-        if(startingClues) {
-          s.clue = startingClues[n + groupNo * groupSize];
-        }
+function makeUrlParams(squares: Array<CoreSquare>) {
+
+  let urlParams = new URLSearchParams();
+
+  let clues="";
+  squares.forEach(s => clues += s.clue + "~");
+  urlParams.append("clues", clues.slice(0, -1));
+
+  console.log("answer group values", squares.map(s  => s.answerGroup));
+  let key = 0;
+  squares.forEach(s => key = key * nGroups + s.answerGroup);
+  urlParams.append("key", key.toString());
+  return urlParams;
+}
+
+function unpackURLClues(urlParams: URLSearchParams) {
+
+  const urlClues = urlParams.get("clues");
+  if(urlClues) {
+    const clues = urlClues.split("~");
+    
+    if(clues.length === nSquares) {
+      return clues;
+    } else {
+      console.log("Did not find the expected number of clues", clues);
+    }
+  }
+  return null;
+}
+
+function unpackURLSolutionGroups(urlParams: URLSearchParams) {
+  let values: Array<number> | null = null;
+
+  const urlKey = urlParams.get("key");
+  if (urlKey) {
+
+    let combinedValues = parseInt(urlKey);
+
+    values = [];
+    for (let i = 0; i < nSquares; ++i) {
+      const value = combinedValues % nGroups;
+      combinedValues = (combinedValues - value) / nGroups;
+      values.push(value);
+    }
+    values.reverse();
+
+    // Check the values.  There should be groupSize values for each group.
+    for (let g = 0; values && g < nGroups; ++g) {
+      const matched = values.filter(k => k === g);
+      if (matched.length !== groupSize) {
+        console.log("Cannot interpret urlKey", urlKey);
+        values = null;
       }
     }
 
-    return squares;
+    console.log("Group values", values);
+  }
+
+  return values;
 }
+
+let startingSquares: Array<CoreSquare> = [];
+let cluesSetByURL: boolean;
+
+function processURLParams() {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    const urlClues = unpackURLClues(urlParams);
+    const urlSolutionGroups = unpackURLSolutionGroups(urlParams);
+    
+    cluesSetByURL = false;
+    if(urlClues && urlSolutionGroups) {
+      cluesSetByURL = true;
+      
+      for(let i = 0; i < nSquares; ++i) {
+        startingSquares.push(
+          new CoreSquare(urlSolutionGroups[i], urlClues[i])
+        );
+      }
+    }
+    else {
+      if(urlParams.toString()) {
+        alert("Could not understand URL parameters");
+      }
+
+      for (let groupNo = 0; groupNo < nGroups; ++groupNo) {
+        for (let n = 0; n < groupSize; ++n) {
+          let s = new CoreSquare(groupNo);
+          startingSquares.push(s);
+
+          // To help with testing
+          if (startingClues) {
+            s.clue = startingClues[n + groupNo * groupSize];
+          }
+        }
+      }
+    }
+}
+
+processURLParams();
+
 
 // Check that 
 // - Squares in solved groups below 'groupBeingProcessed' are correctly placed
@@ -93,10 +181,10 @@ function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: numbe
   }
 }
 
+
 const App: FC<{}> = () => {
 
-  const [coreSquares, setCoreSquares] = useState(startingCoreSquares);
-  const [wordsEntered, setWordsEntered] = useState(false);
+  const [coreSquares, setCoreSquares] = useState(startingSquares);
   const [lastSolvedGroup, setLastSolvedGroup] = useState(0);
 
   const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
@@ -106,8 +194,10 @@ const App: FC<{}> = () => {
   }
 
   const finishedEnteringWords: () => void = () => {
-    setCoreSquares(shuffleArray([...coreSquares]));
-    setWordsEntered(true);
+    const shuffled = shuffleArray([...coreSquares]);
+    const urlParams = makeUrlParams(shuffled);
+    //const urlParams = makeUrlParams(coreSquares);
+    window.open(window.location.href + "?" + urlParams.toString());
   }
 
   const clueSelected: (index: number) => void = (index) => {
@@ -149,7 +239,7 @@ const App: FC<{}> = () => {
     }
   }
 
-  if (wordsEntered) {
+  if (cluesSetByURL) {
     return (<Wall coreSquares={coreSquares} onSelect={clueSelected}/>);
   } else {
     return (<>
