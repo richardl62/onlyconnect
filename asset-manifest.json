@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/richardl62/onlyconnect/static/css/main.7a03be99.chunk.css",
+    "main.js": "/richardl62/onlyconnect/static/js/main.1102034d.chunk.js",
+    "main.js.map": "/richardl62/onlyconnect/static/js/main.1102034d.chunk.js.map",
+    "runtime-main.js": "/richardl62/onlyconnect/static/js/runtime-main.0b747af1.js",
+    "runtime-main.js.map": "/richardl62/onlyconnect/static/js/runtime-main.0b747af1.js.map",
+    "static/js/2.d9e970f9.chunk.js": "/richardl62/onlyconnect/static/js/2.d9e970f9.chunk.js",
+    "static/js/2.d9e970f9.chunk.js.map": "/richardl62/onlyconnect/static/js/2.d9e970f9.chunk.js.map",
+    "static/js/3.eec67499.chunk.js": "/richardl62/onlyconnect/static/js/3.eec67499.chunk.js",
+    "static/js/3.eec67499.chunk.js.map": "/richardl62/onlyconnect/static/js/3.eec67499.chunk.js.map",
+    "index.html": "/richardl62/onlyconnect/index.html",
+    "static/css/main.7a03be99.chunk.css.map": "/richardl62/onlyconnect/static/css/main.7a03be99.chunk.css.map",
+    "static/js/2.d9e970f9.chunk.js.LICENSE.txt": "/richardl62/onlyconnect/static/js/2.d9e970f9.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0b747af1.js",
+    "static/js/2.d9e970f9.chunk.js",
+    "static/css/main.7a03be99.chunk.css",
+    "static/js/main.1102034d.chunk.js"
+  ]
+}
