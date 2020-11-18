@@ -11,12 +11,12 @@ function filterClue(clue: string) {
 }
 
 let startingClues: Array<string>;
-startingClues = [
-  'a1', 'a2', 'a3', 'a4',
-  'b1', 'b2', 'b3', 'b4',
-  'c1', 'c2', 'c3', 'c4',
-  'd1 longlonglong', 'd2', 'd3', 'd4',
-];
+// startingClues = [
+//   'a1', 'a2', 'a3', 'a4',
+//   'b1', 'b2', 'b3', 'b4',
+//   'c1', 'c2', 'c3', 'c4',
+//   'd1 longlonglong', 'd2', 'd3', 'd4',
+// ];
 
 const groupSize = 4;
 const nGroups = 4;
