@@ -1,16 +1,9 @@
 import React, { FC, useState} from 'react';
 import Wall  from './wall';
+import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
 
-// Shuffle array in place. Return the shuffled array
-function shuffleArray<T>(array: Array<T>) {
-  // From https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-  for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
+
 
 let startingClues: Array<string>;
 startingClues = [
@@ -52,7 +45,8 @@ function makeUrlParams(squares: Array<CoreSquare>) {
   console.log("answer group values", squares.map(s  => s.answerGroup));
   let key = 0;
   squares.forEach(s => key = key * nGroups + s.answerGroup);
-  urlParams.append("key", key.toString());
+  const encrypted = DumbEncrypt.doInt(key);
+  urlParams.append("key", encrypted.toString());
   return urlParams;
 }
 
@@ -77,7 +71,7 @@ function unpackURLSolutionGroups(urlParams: URLSearchParams) {
   const urlKey = urlParams.get("key");
   if (urlKey) {
 
-    let combinedValues = parseInt(urlKey);
+    let combinedValues = DumbEncrypt.undoInt(parseInt(urlKey));
 
     values = [];
     for (let i = 0; i < nSquares; ++i) {
