@@ -21,7 +21,11 @@ const Square : FC<SquareProps> = ({coreSquare, index, onChange, onSelect}: Squar
             onChange(index, event.target.value)
         };
 
-        return (<input type="text" value={coreSquare.clue} onChange={onClueChange} />);
+        return (
+            <div className="square">
+                <input type="text" value={coreSquare.clue} onChange={onClueChange} />
+            </div>
+            );
     }
     else if (onSelect) {
         const onClick: () => void = () => {
@@ -37,11 +41,11 @@ const Square : FC<SquareProps> = ({coreSquare, index, onChange, onSelect}: Squar
         }
 
         return (
-            <div 
+            <div
                 onClick={onClick}
                 className={className}
                 >
-            {coreSquare.clue}
+                {coreSquare.clue}
             </div>
             );
     }

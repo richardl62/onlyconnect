@@ -202,7 +202,7 @@ const App: FC<{}> = () => {
   const clueSelected: (index: number) => void = (index) => {
 
     // Ignore squares that have already been solved.
-    if(!coreSquares[index].solvedGroup) {
+    if(cluesSetByURL && !coreSquares[index].solvedGroup) {
       let squares = [...coreSquares];
       squares[index].selected = !squares[index].selected;
 
@@ -239,13 +239,19 @@ const App: FC<{}> = () => {
   }
 
   if (cluesSetByURL) {
-    return (<Wall coreSquares={coreSquares} onSelect={clueSelected}/>);
+    return (
+      <div className="onlyconnect">
+        <Wall coreSquares={coreSquares} onSelect={clueSelected}/>
+      </div>
+      )
   } else {
-    return (<>
-      <div>Enter clues then press 'Done'</div>
-      <Wall coreSquares={coreSquares} onChange={clueChange} />
-      <button type="button" onClick={finishedEnteringWords}>Done</button>
-    </>
+    return (
+      <div className="onlyconnect">
+        <Wall coreSquares={coreSquares} onChange={clueChange} />
+        <div className="controls">
+          <button type="button" onClick={finishedEnteringWords}>Done</button>
+        </div>
+      </div>
     );
   }
 };
