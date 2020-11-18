@@ -3,7 +3,12 @@ import Wall  from './wall';
 import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
 
-
+// Remove unsuitable characeters from clue
+function filterClue(clue: string) {
+  // For now at least just remove '~' as that has special meaning in
+  // the URLs that are generated. 
+  return clue.replace(/~/g, "");
+}
 
 let startingClues: Array<string>;
 startingClues = [
@@ -183,7 +188,7 @@ const App: FC<{}> = () => {
 
   const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
     let newSquares = [...coreSquares];
-    newSquares[index].clue = newClue;
+    newSquares[index].clue = filterClue(newClue);
     setCoreSquares(newSquares);
   }
 
