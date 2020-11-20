@@ -202,6 +202,13 @@ const App: FC<{}> = () => {
     window.open(window.location.href + "?" + urlParams.toString());
   }
 
+  const hasBadGuess = () => Boolean(coreSquares.find(s => s.badGuess));
+  const clearBadGuess = () => {
+    let newSquares = [...coreSquares];
+    newSquares.forEach(s => s.badGuess = false);
+    setCoreSquares(newSquares);
+  }
+
   const clueSelected: (index: number) => void = (index) => {
 
     // Ignore squares that have already been solved.
@@ -248,6 +255,13 @@ const App: FC<{}> = () => {
     return (
       <div className="onlyconnect">
         <Wall coreSquares={coreSquares} onSelect={clueSelected}/>
+        <div className="controls">
+        {hasBadGuess() ?
+            (<button type="button" onClick={clearBadGuess}>
+              Clear incorrect guess
+            </button>) : null
+        }
+        </div>
       </div>
       )
   } else {
