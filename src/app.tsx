@@ -49,7 +49,6 @@ function makeUrlParams(squares: Array<CoreSquare>) {
   squares.forEach(s => clues += s.clue + "~");
   urlParams.append("clues", clues.slice(0, -1));
 
-  console.log("answer group values", squares.map(s  => s.answerGroup));
   let key = 0;
   squares.forEach(s => key = key * nGroups + s.answerGroup);
   const encrypted = DumbEncrypt.doInt(key);
@@ -96,8 +95,6 @@ function unpackURLSolutionGroups(urlParams: URLSearchParams) {
         values = null;
       }
     }
-
-    console.log("Group values", values);
   }
 
   return values;
