@@ -1,4 +1,4 @@
-import React, { FC, useState} from 'react';
+import React, { FC, useEffect, useState} from 'react';
 import Wall  from './wall';
 import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
@@ -105,6 +105,7 @@ function unpackURLSolutionGroups(urlParams: URLSearchParams) {
 let startingSquares: Array<CoreSquare> = [];
 let cluesSetByURL: boolean;
 
+// KLUDGE - Use to set gloabls. Would be better called in the App.
 function processURLParams() {
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -186,6 +187,7 @@ const App: FC<{}> = () => {
 
   const [coreSquares, setCoreSquares] = useState(startingSquares);
   const [lastSolvedGroup, setLastSolvedGroup] = useState(0);
+  useEffect(()=>{document.title = "OnlyConnect"});
 
   const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
     let newSquares = [...coreSquares];
