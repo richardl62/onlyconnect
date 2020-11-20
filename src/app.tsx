@@ -29,7 +29,8 @@ function groupFromIndex(index: number) {
 class CoreSquare {
   readonly answerGroup: number;
   clue: string;
-  selected = false; 
+  selected = false;
+  badGuess = false; 
   solvedGroup: number | null = null;
 
   constructor(answerGroup: number, clue="") {
@@ -204,6 +205,7 @@ const App: FC<{}> = () => {
     // Ignore squares that have already been solved.
     if(cluesSetByURL && !coreSquares[index].solvedGroup) {
       let squares = [...coreSquares];
+      squares.forEach(s => s.badGuess = false);
       squares[index].selected = !squares[index].selected;
 
       let selected = squares.filter(cs => cs.selected);
@@ -231,6 +233,8 @@ const App: FC<{}> = () => {
             })
             setLastSolvedGroup(nGroups);
           }
+        } else {
+          selected.forEach(s => s.badGuess = true);
         }
       }
 

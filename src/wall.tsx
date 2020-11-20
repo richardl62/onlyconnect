@@ -4,6 +4,7 @@ import React, { FC } from 'react';
 interface CoreSquare {
     clue: string;
     selected: boolean;
+    badGuess: boolean;
     solvedGroup: number | null;
 };
 
@@ -35,6 +36,9 @@ const Square : FC<SquareProps> = ({coreSquare, index, onChange, onSelect}: Squar
         let className="square";
         if(coreSquare.selected) {
             className += " selected";
+        }
+        if(coreSquare.badGuess) {
+            className += " bad-guess";
         }
         if(coreSquare.solvedGroup) {
             className += " group" + coreSquare.solvedGroup;
