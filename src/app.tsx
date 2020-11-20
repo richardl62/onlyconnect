@@ -1,3 +1,4 @@
+// TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState} from 'react';
 import Wall  from './wall';
 import { shuffleArray, DumbEncrypt } from './tools';
@@ -202,12 +203,6 @@ const App: FC<{}> = () => {
     window.open(window.location.href + "?" + urlParams.toString());
   }
 
-  const hasBadGuess = () => Boolean(coreSquares.find(s => s.badGuess));
-  const clearBadGuess = () => {
-    let newSquares = [...coreSquares];
-    newSquares.forEach(s => s.badGuess = false);
-    setCoreSquares(newSquares);
-  }
 
   const clueSelected: (index: number) => void = (index) => {
 
@@ -251,29 +246,41 @@ const App: FC<{}> = () => {
     }
   }
 
-  if (cluesSetByURL) {
+   
+  const hasBadGuess = Boolean(coreSquares.find(s => s.badGuess));
+
+  const ClearBadGuessButton: FC = () => {
+
+    const doClear = () => {
+      let newSquares = [...coreSquares];
+      newSquares.forEach(s => s.badGuess = false);
+      setCoreSquares(newSquares);
+    }
+
     return (
-      <div className="onlyconnect">
-        <Wall coreSquares={coreSquares} onSelect={clueSelected}/>
-        <div className="controls">
-        {hasBadGuess() ?
-            (<button type="button" onClick={clearBadGuess}>
-              Clear incorrect guess
-            </button>) : null
-        }
-        </div>
-      </div>
-      )
-  } else {
-    return (
-      <div className="onlyconnect">
-        <Wall coreSquares={coreSquares} onChange={clueChange} />
-        <div className="controls">
-          <button type="button" onClick={finishedEnteringWords}>Done</button>
-        </div>
-      </div>
-    );
+      <button type="button" onClick={doClear}>
+        Clear incorrect guess
+      </button>
+    )
+  };
+
+
+  const DoneEnteringCluesButton: FC = () => {
+    return <button type="button" onClick={finishedEnteringWords}>Done</button>
   }
+
+  return (
+    <div className="onlyconnect">
+      <Wall coreSquares={coreSquares} 
+        onSelect={clueSelected} 
+        onChange={cluesSetByURL? undefined: clueChange}
+      />
+      <div className="controls">
+        {cluesSetByURL ? null : <DoneEnteringCluesButton />}
+        {hasBadGuess ? <ClearBadGuessButton /> : null}
+      </div>
+    </div>
+  )
 };
 
 export default App;
