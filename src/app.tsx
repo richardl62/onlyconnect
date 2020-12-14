@@ -243,20 +243,23 @@ const App: FC<{}> = () => {
     }
   }
 
-   
+  const hasGuess = Boolean(coreSquares.find(s => (s.selected || s.badGuess)));
   const hasBadGuess = Boolean(coreSquares.find(s => s.badGuess));
 
-  const ClearBadGuessButton: FC = () => {
+  const ClearGuessButton: FC = () => {
 
     const doClear = () => {
       let newSquares = [...coreSquares];
-      newSquares.forEach(s => s.badGuess = false);
+      newSquares.forEach(s => {
+        s.badGuess = false;
+        s.selected = false;
+      });
       setCoreSquares(newSquares);
     }
 
     return (
       <button type="button" onClick={doClear}>
-        Clear incorrect guess
+        Clear guess
       </button>
     )
   };
@@ -274,7 +277,8 @@ const App: FC<{}> = () => {
       />
       <div className="controls">
         {cluesSetByURL ? null : <DoneEnteringCluesButton />}
-        {hasBadGuess ? <ClearBadGuessButton /> : null}
+        {hasGuess ? <ClearGuessButton /> : null}
+        {hasBadGuess ? <div>Wrong!</div> : null}
       </div>
     </div>
   )
