@@ -61,11 +61,10 @@ const Square : FC<SquareProps> = ({coreSquare, index, onChange, onSelect}: Squar
 
 interface WallProps {
     coreSquares: Array<CoreSquare>,
-    onChange?: (index: number, clue: string) => void,
     onSelect?: (index: number) => void,
 };
 
-const Wall: FC<WallProps> = ({ coreSquares, onChange, onSelect }: WallProps) => {
+const Wall: FC<WallProps> = ({ coreSquares, onSelect }: WallProps) => {
     return (
         <div className="wall">
             {coreSquares.map((cs: CoreSquare, index: number) => (
@@ -73,7 +72,6 @@ const Wall: FC<WallProps> = ({ coreSquares, onChange, onSelect }: WallProps) => 
                     key={index.toString()} 
                     index={index}
                     coreSquare={cs}
-                    onChange={onChange}
                     onSelect={onSelect}
                 />
             ))}

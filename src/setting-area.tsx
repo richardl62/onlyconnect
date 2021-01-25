@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
 
 
-function removeLastIfEmpty(words: Array<string>)
+function removeLastIfEmpty(clues: Array<string>)
 {
-    if(words[words.length-1] === "") {
-        words.pop();
+    if(clues[clues.length-1] === "") {
+        clues.pop();
     }
-    return words;
+    return clues;
 }
 
-function getWords(text: string) {
+function getClues(text: string) {
     const commaSep = text.split(/,\s*/);
     if(commaSep.length > 1) {
         return removeLastIfEmpty(commaSep);
@@ -18,7 +18,10 @@ function getWords(text: string) {
 
 }
 
-function SettingArea()
+interface SettingAreaProps {
+    cluesSet: (clues: Array<string>) => void;
+}
+function SettingArea({cluesSet} : SettingAreaProps)
 {
     const [recordedText, setRecordedText] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -29,13 +32,13 @@ function SettingArea()
     }
 
     function onDone() {
-        const words = getWords(recordedText);
-        if(words.length === 3) {
-            console.log("Done:", words);
-            setErrorMessage("");
+        const clues = getClues(recordedText);
+        if(clues.length === 16) {
+            console.log("Done:", clues);
+            cluesSet(clues);
         } else {
-            let message = words.length + " clues found:";
-            words.forEach(word => message += ` '${word}',`);
+            let message = clues.length + " clues found:";
+            clues.forEach(word => message += ` '${word}',`);
             setErrorMessage(message);
         }
     }
@@ -49,8 +52,12 @@ function SettingArea()
     
     return (<>
         <div>
-            <p>Enter clues.  These can be single words, or words and phrases seperated by commas</p>
-            <textarea  onChange={textAreaChange}/>
+            <p>Enter clues.  These can be single clues, or clues and phrases seperated by commas</p>
+            <textarea  
+                cols={50}
+                rows={4}
+                onChange={textAreaChange}
+            />
         </div>
         <button onClick={onDone}>Done</button>
         <ErrorMessage/>

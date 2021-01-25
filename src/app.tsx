@@ -4,6 +4,7 @@ import SolvingArea from './solving-area'
 import SettingArea from './setting-area'
 import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
+import Wall from './wall';
 
 // Remove unsuitable characeters from clue
 function filterClue(clue: string) {
@@ -37,7 +38,7 @@ class CoreSquare {
 
   constructor(answerGroup: number, clue="") {
     this.answerGroup = answerGroup;
-    this.clue = clue;
+    this.clue = filterClue(clue);
   }
 };
 
@@ -188,17 +189,18 @@ const App: FC<{}> = () => {
   const [lastSolvedGroup, setLastSolvedGroup] = useState(0);
   useEffect(()=>{document.title = "OnlyConnect"});
 
-  const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
-    let newSquares = [...coreSquares];
-    newSquares[index].clue = filterClue(newClue);
-    setCoreSquares(newSquares);
-  }
+  // const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
+  //   let newSquares = [...coreSquares];
+  //   newSquares[index].clue = filterClue(newClue);
+  //   setCoreSquares(newSquares);
+  // }
 
-  const finishedEnteringWords: () => void = () => {
-    const shuffled = shuffleArray([...coreSquares]);
-    const urlParams = makeUrlParams(shuffled);
-    //const urlParams = makeUrlParams(coreSquares);
-    window.open(window.location.href + "?" + urlParams.toString());
+  const cluesSet = (clues: Array<string>) => {
+    const unshuffled = clues.map((clue, index) => {
+      const group = Math.floor(index/4);
+      return new CoreSquare(group, clue);
+    }); 
+    setCoreSquares(unshuffled);
   }
 
 
@@ -265,13 +267,22 @@ const App: FC<{}> = () => {
       doClearGuess={doClearGuess}
     />);
   }
+
+  const ResultArea = () => {
+    const shuffled = shuffleArray(coreSquares);
+    const urlParams = makeUrlParams(shuffled);
+    const url = window.location.href + "?" + urlParams.toString();
+    return (<>
+        <Wall coreSquares={coreSquares} />
+        <a href={url}>Playable</a>
+      </>);
+  }
+
+  window.open();
   return (
     <div className="onlyconnect">
-      <SettingArea
-          // coreSquares={coreSquares}
-          // clueChange={clueChange}
-          // doneEnteringWords={finishedEnteringWords}
-      />
+      <SettingArea cluesSet={cluesSet} />
+      {coreSquares? <ResultArea/> : null}
     </div>
   )
 };
