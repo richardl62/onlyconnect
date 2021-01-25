@@ -19,9 +19,9 @@ function getClues(text: string) {
 }
 
 interface SettingAreaProps {
-    cluesSet: (clues: Array<string>) => void;
+    recordClues: (clues: Array<string> | null) => void;
 }
-function SettingArea({cluesSet} : SettingAreaProps)
+function SettingArea({recordClues} : SettingAreaProps)
 {
     const [recordedText, setRecordedText] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -35,11 +35,13 @@ function SettingArea({cluesSet} : SettingAreaProps)
         const clues = getClues(recordedText);
         if(clues.length === 16) {
             console.log("Done:", clues);
-            cluesSet(clues);
+            recordClues(clues);
+            setErrorMessage("");
         } else {
             let message = clues.length + " clues found:";
             clues.forEach(word => message += ` '${word}',`);
             setErrorMessage(message);
+            recordClues(null);
         }
     }
 
@@ -52,7 +54,7 @@ function SettingArea({cluesSet} : SettingAreaProps)
     
     return (<>
         <div>
-            <p>Enter clues.  These can be single clues, or clues and phrases seperated by commas</p>
+            <p>Enter clues.  These can be single words, or words and phrases seperated by commas</p>
             <textarea  
                 cols={50}
                 rows={4}

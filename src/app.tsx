@@ -186,21 +186,19 @@ function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: numbe
 const App: FC<{}> = () => {
 
   const [coreSquares, setCoreSquares] = useState(startingSquares);
+  const [cluesEntered, setCluesEntered] = useState(false);
+
   const [lastSolvedGroup, setLastSolvedGroup] = useState(0);
   useEffect(()=>{document.title = "OnlyConnect"});
 
-  // const clueChange: (index: number, newClue: string) => void = (index, newClue) => {
-  //   let newSquares = [...coreSquares];
-  //   newSquares[index].clue = filterClue(newClue);
-  //   setCoreSquares(newSquares);
-  // }
-
+  
   const cluesSet = (clues: Array<string>) => {
-    const unshuffled = clues.map((clue, index) => {
+    const coreSquares_ = clues.map((clue, index) => {
       const group = Math.floor(index/4);
       return new CoreSquare(group, clue);
     }); 
-    setCoreSquares(unshuffled);
+    setCoreSquares(coreSquares_);
+    setCluesEntered(true);
   }
 
 
@@ -269,20 +267,28 @@ const App: FC<{}> = () => {
   }
 
   const ResultArea = () => {
-    const shuffled = shuffleArray(coreSquares);
+    const shuffled = shuffleArray([...coreSquares]);
     const urlParams = makeUrlParams(shuffled);
     const url = window.location.href + "?" + urlParams.toString();
-    return (<>
+    return (
+      <div>
         <Wall coreSquares={coreSquares} />
-        <a href={url}>Playable</a>
-      </>);
+        <div> <a href={url} target="blank">Randomised (Playable)</a> </div>
+      </div>);
   }
 
-  window.open();
+  const recordClues = (clues: Array<string> | null) => {
+      if(clues) {
+        cluesSet(clues);
+      } else {
+        setCluesEntered(false);
+      }
+  }
+
   return (
     <div className="onlyconnect">
-      <SettingArea cluesSet={cluesSet} />
-      {coreSquares? <ResultArea/> : null}
+      <SettingArea recordClues={recordClues} />
+      {cluesEntered ? <ResultArea/> : null}
     </div>
   )
 };

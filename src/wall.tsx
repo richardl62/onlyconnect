@@ -11,51 +11,36 @@ interface CoreSquare {
 interface SquareProps {
     coreSquare: CoreSquare;
     index: number;
-    onChange?: (index: number, word: string) => void;
     onSelect?: (index:number) => void;
 }
 
-const Square : FC<SquareProps> = ({coreSquare, index, onChange, onSelect}: SquareProps) => {
+const Square : FC<SquareProps> = ({coreSquare, index, onSelect}: SquareProps) => {
   
-    if (onChange) {
-        const onClueChange: (event: any) => void = (event) => {
-            onChange(index, event.target.value)
-        };
-
-        return (
-            <div className="square">
-                <input type="text" value={coreSquare.clue} onChange={onClueChange} />
-            </div>
-            );
-    }
-    else if (onSelect) {
-        const onClick: () => void = () => {
+    const onClick: () => void = () => {
+        if(onSelect)
             onSelect(index)
-        };
-        
-        let className="square";
-        if(coreSquare.selected) {
-            className += " selected";
-        }
-        if(coreSquare.badGuess) {
-            className += " bad-guess";
-        }
-        if(coreSquare.solvedGroup) {
-            className += " group" + coreSquare.solvedGroup;
-        }
+    };
 
-        return (
-            <div
-                onClick={onClick}
-                className={className}
-                >
-                {coreSquare.clue}
-            </div>
-            );
+    let className = "square";
+    if (coreSquare.selected) {
+        className += " selected";
     }
-    else {
-        throw Error("Oops");
+    if (coreSquare.badGuess) {
+        className += " bad-guess";
     }
+    if (coreSquare.solvedGroup) {
+        className += " group" + coreSquare.solvedGroup;
+    }
+
+    return (
+        <div
+            onClick={onClick}
+            className={className}
+        >
+            {coreSquare.clue}
+        </div>
+    );
+
 }
 
 
