@@ -268,9 +268,9 @@ const App: FC<{}> = () => {
   return (
     <div className="onlyconnect">
       <SettingArea
-          coreSquares={coreSquares}
-          clueChange={clueChange}
-          doneEnteringWords={finishedEnteringWords}
+          // coreSquares={coreSquares}
+          // clueChange={clueChange}
+          // doneEnteringWords={finishedEnteringWords}
       />
     </div>
   )
