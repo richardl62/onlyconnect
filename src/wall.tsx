@@ -82,3 +82,4 @@ const Wall: FC<WallProps> = ({ coreSquares, onChange, onSelect }: WallProps) => 
 };
 
 export default Wall;
+export type { CoreSquare }

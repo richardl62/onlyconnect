@@ -1,6 +1,7 @@
 // TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState} from 'react';
 import Wall  from './wall';
+import SolvingArea from './solving-area'
 import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
 
@@ -246,19 +247,19 @@ const App: FC<{}> = () => {
   const hasGuess = Boolean(coreSquares.find(s => (s.selected || s.badGuess)));
   const hasBadGuess = Boolean(coreSquares.find(s => s.badGuess));
 
+  const doClearGuess = () => {
+    let newSquares = [...coreSquares];
+    newSquares.forEach(s => {
+      s.badGuess = false;
+      s.selected = false;
+    });
+    setCoreSquares(newSquares);
+  }
+
   const ClearGuessButton: FC = () => {
 
-    const doClear = () => {
-      let newSquares = [...coreSquares];
-      newSquares.forEach(s => {
-        s.badGuess = false;
-        s.selected = false;
-      });
-      setCoreSquares(newSquares);
-    }
-
     return (
-      <button type="button" onClick={doClear}>
+      <button type="button" onClick={doClearGuess}>
         Clear guess
       </button>
     )
@@ -269,6 +270,15 @@ const App: FC<{}> = () => {
     return <button type="button" onClick={finishedEnteringWords}>Done</button>
   }
 
+  if(cluesSetByURL) {
+    return (<SolvingArea
+      coreSquares={coreSquares} 
+      hasGuess={hasGuess}
+      hasBadGuess={hasBadGuess}
+      clueSelected={clueSelected}
+      doClearGuess={doClearGuess}
+    />);
+  }
   return (
     <div className="onlyconnect">
       <Wall coreSquares={coreSquares} 
