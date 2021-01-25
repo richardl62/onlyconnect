@@ -1,7 +1,7 @@
 // TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState} from 'react';
-import Wall  from './wall';
 import SolvingArea from './solving-area'
+import SettingArea from './setting-area'
 import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
 
@@ -256,20 +256,6 @@ const App: FC<{}> = () => {
     setCoreSquares(newSquares);
   }
 
-  const ClearGuessButton: FC = () => {
-
-    return (
-      <button type="button" onClick={doClearGuess}>
-        Clear guess
-      </button>
-    )
-  };
-
-
-  const DoneEnteringCluesButton: FC = () => {
-    return <button type="button" onClick={finishedEnteringWords}>Done</button>
-  }
-
   if(cluesSetByURL) {
     return (<SolvingArea
       coreSquares={coreSquares} 
@@ -281,15 +267,11 @@ const App: FC<{}> = () => {
   }
   return (
     <div className="onlyconnect">
-      <Wall coreSquares={coreSquares} 
-        onSelect={clueSelected} 
-        onChange={cluesSetByURL? undefined: clueChange}
+      <SettingArea
+          coreSquares={coreSquares}
+          clueChange={clueChange}
+          doneEnteringWords={finishedEnteringWords}
       />
-      <div className="controls">
-        {cluesSetByURL ? null : <DoneEnteringCluesButton />}
-        {hasGuess ? <ClearGuessButton /> : null}
-        {hasBadGuess ? <div>Wrong!</div> : null}
-      </div>
     </div>
   )
 };
