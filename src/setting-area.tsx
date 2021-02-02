@@ -1,21 +1,26 @@
 import React, {useState} from 'react';
 
+function trimmed(words: Array<string>) {
+    console.log("Pre-trimmed", words);
 
-function removeLastIfEmpty(clues: Array<string>)
-{
-    if(clues[clues.length-1] === "") {
-        clues.pop();
+    let result : Array<string> = [];
+    for(let i in words) {
+        const t = words[i].trim();
+        if (t) {
+            result.push(t);
+        } 
     }
-    return clues;
+
+    return result;
 }
 
-function getClues(text: string) {
-    const commaSep = text.split(/,\s*/);
-    if(commaSep.length > 1) {
-        return removeLastIfEmpty(commaSep);
-    }
-    return removeLastIfEmpty(text.split(/\s+/));
+function getCluesSpaceSeperated(text: string) {
+    return trimmed(text.split(/[,\s]/));
+}
 
+// Find non-empty clues separated by commas or newlines
+function getCluesCommaSeperated(text: string) {
+    return trimmed(text.split(/[,\n]/));
 }
 
 interface SettingAreaProps {
@@ -32,17 +37,29 @@ function SettingArea({recordClues} : SettingAreaProps)
     }
 
     function onDone() {
-        const clues = getClues(recordedText);
-        if(clues.length === 16) {
-            console.log("Done:", clues);
-            recordClues(clues);
-            setErrorMessage("");
-        } else {
-            let message = clues.length + " clues found:";
-            clues.forEach(word => message += ` '${word}',`);
-            setErrorMessage(message);
-            recordClues(null);
-        }
+        setErrorMessage("");
+
+        const spaceSeparated = getCluesSpaceSeperated(recordedText);
+        console.log("Space separated", spaceSeparated);
+        if(spaceSeparated.length === 16) {
+            recordClues(spaceSeparated);
+            return;
+        } 
+        
+        const commaSeparated = getCluesCommaSeperated(recordedText);
+        console.log("Comma separated", commaSeparated);
+
+        if(commaSeparated.length === 16) {
+            recordClues(commaSeparated);
+            return;
+        } 
+
+        setErrorMessage(`Did not find 16 clues: 
+            ${spaceSeparated.length} found with space seperation.
+            ${commaSeparated.length} found with comma-seperation.`     
+        );
+
+        
     }
 
     const ErrorMessage = () => {
