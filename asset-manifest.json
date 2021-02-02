@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/onlyconnect/static/css/main.bf13b8e2.chunk.css",
-    "main.js": "/onlyconnect/static/js/main.48217cc9.chunk.js",
-    "main.js.map": "/onlyconnect/static/js/main.48217cc9.chunk.js.map",
+    "main.js": "/onlyconnect/static/js/main.7254bb48.chunk.js",
+    "main.js.map": "/onlyconnect/static/js/main.7254bb48.chunk.js.map",
     "runtime-main.js": "/onlyconnect/static/js/runtime-main.15141b09.js",
     "runtime-main.js.map": "/onlyconnect/static/js/runtime-main.15141b09.js.map",
     "static/js/2.0aabe348.chunk.js": "/onlyconnect/static/js/2.0aabe348.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.15141b09.js",
     "static/js/2.0aabe348.chunk.js",
     "static/css/main.bf13b8e2.chunk.css",
-    "static/js/main.48217cc9.chunk.js"
+    "static/js/main.7254bb48.chunk.js"
   ]
 }
