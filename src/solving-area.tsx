@@ -12,23 +12,23 @@ interface SolvingAreaProps {
 
 function SolvingArea({coreSquares, hasGuess, hasBadGuess, clueSelected, doClearGuess} : SolvingAreaProps) {
 
-     const clearGuessButton = (
+     const ClearGuessButton = () => (
         <button type="button" onClick={doClearGuess}>
             Clear guess
         </button>
     );
 
     return (
-        <>
+        <div className="solving-area">
             <Wall
                 coreSquares={coreSquares}
                 onSelect={clueSelected}
             />
             <div className="controls">
-                {hasGuess ? clearGuessButton : null}
+                <ClearGuessButton/>
                 {hasBadGuess ? <div>Wrong!</div> : null}
             </div>
-        </>
+        </div>
     );
 } 
 

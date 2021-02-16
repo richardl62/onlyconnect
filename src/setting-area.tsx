@@ -78,7 +78,7 @@ function SettingArea({recordClues} : SettingAreaProps)
                 onChange={textAreaChange}
             />
         </div>
-        <button onClick={onDone}>Done</button>
+        <button className="done-button" onClick={onDone}>Done</button>
         <ErrorMessage/>
     </>);
 }

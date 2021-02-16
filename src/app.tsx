@@ -286,7 +286,7 @@ const App: FC<{}> = () => {
   }
 
   return (
-    <div className="onlyconnect">
+    <div className="setting-area">
       <SettingArea recordClues={recordClues} />
       {cluesEntered ? <ResultArea/> : null}
     </div>
