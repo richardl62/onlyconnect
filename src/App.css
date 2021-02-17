@@ -4,9 +4,10 @@
   flex-direction: column;
 }
 
-.controls {
-  display: inline-flex;
+.solving-controls {
+  display: flex;
   margin-top: 10px;
+  justify-content: space-between;
 }
 
 .controls button {

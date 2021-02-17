@@ -4,17 +4,22 @@ import Wall, { CoreSquare } from './wall'
 
 interface SolvingAreaProps {
     coreSquares: Array<CoreSquare>
-    hasGuess: boolean;
     hasBadGuess: boolean;
     clueSelected: (index: number) => void,
     doClearGuess: ()=>void;
+    doRestart: ()=>void;
 }
 
-function SolvingArea({coreSquares, hasGuess, hasBadGuess, clueSelected, doClearGuess} : SolvingAreaProps) {
+function SolvingArea({coreSquares, hasBadGuess, clueSelected, doClearGuess, doRestart} : SolvingAreaProps) {
 
      const ClearGuessButton = () => (
         <button type="button" onClick={doClearGuess}>
             Clear guess
+        </button>
+    );
+    const RestartButton = () => (
+        <button type="button" onClick={doRestart}>
+            Restart
         </button>
     );
 
@@ -24,9 +29,12 @@ function SolvingArea({coreSquares, hasGuess, hasBadGuess, clueSelected, doClearG
                 coreSquares={coreSquares}
                 onSelect={clueSelected}
             />
-            <div className="controls">
-                <ClearGuessButton/>
-                {hasBadGuess ? <div>Wrong!</div> : null}
+            <div className="solving-controls">
+                <div>
+                    <ClearGuessButton/>
+                    {hasBadGuess ? <div>Wrong!</div> : null}
+                </div>
+                <RestartButton/>
             </div>
         </div>
     );

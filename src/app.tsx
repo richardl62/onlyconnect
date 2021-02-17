@@ -6,6 +6,8 @@ import { shuffleArray, DumbEncrypt } from './tools';
 import './App.css';
 import Wall from './wall';
 
+const SolvedGroupKey = "solvedGroups";
+
 // Remove unsuitable characeters from clue
 function filterClue(clue: string) {
   // For now at least just remove '~' as that has special meaning in
@@ -31,13 +33,15 @@ function groupFromIndex(index: number) {
 
 class CoreSquare {
   readonly answerGroup: number;
+  readonly originalIndex: number | null;
   clue: string;
   selected = false;
   badGuess = false; 
   solvedGroup: number | null = null;
 
-  constructor(answerGroup: number, clue="") {
+  constructor(answerGroup: number, originalIndex : number | null = null, clue="") {
     this.answerGroup = answerGroup;
+    this.originalIndex = originalIndex;
     this.clue = filterClue(clue);
   }
 };
@@ -119,7 +123,7 @@ function processURLParams() {
       
       for(let i = 0; i < nSquares; ++i) {
         startingSquares.push(
-          new CoreSquare(urlSolutionGroups[i], urlClues[i])
+          new CoreSquare(urlSolutionGroups[i], i, urlClues[i])
         );
       }
     }
@@ -142,7 +146,37 @@ function processURLParams() {
     }
 }
 
-processURLParams();
+// function processSolveGroups(solvedGroups : Array<any>) {
+//     console.log(solvedGroups);
+//     if(solvedGroups[0] !== null) {
+//       for(let i = 0; i < 4; ++i) {
+//         const index = solvedGroups[i];
+//         let sq = startingSquares[index];
+//         if(sq === undefined) {
+//           // The index is out of range or somehow currupt.
+//           throw new Error("Unexpected value in local history");
+//         }
+//         sq.solvedGroup = 0;
+//       }
+//       positionSquaresInSolvedGroup(startingSquares, 0);
+//     }
+//   }
+
+function startingSetup() {
+  processURLParams();
+  
+  if(cluesSetByURL) {
+    const solvedGroupsItem = localStorage.getItem(SolvedGroupKey);
+    if(solvedGroupsItem) {
+      const solvedGroups = JSON.parse(solvedGroupsItem);
+      console.log(solvedGroups);
+        //processSolveGroups(solvedGroups);
+    }
+  }
+}
+
+// Calling here is a KLUDGE
+startingSetup();
 
 
 // Check that 
@@ -165,6 +199,17 @@ function sanityCheckSolvedGroups(squares: Array<CoreSquare>, groupBeingProcessed
   }
 }
 
+function recordSolvedGroupsInLocalHistory(squares: Array<CoreSquare>) {
+  const solvedGroups = squares.map((sq, index) => {
+    if (typeof sq.originalIndex !== "number") {
+      throw new Error("Original index is not set");
+    }
+    return sq.solvedGroup && sq.originalIndex;
+  });
+  console.log(solvedGroups);
+  localStorage.setItem(SolvedGroupKey, JSON.stringify(solvedGroups));
+}
+
 function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: number) {
 
   sanityCheckSolvedGroups(squares, groupNo);
@@ -180,6 +225,8 @@ function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: numbe
       [squares[index], squares[moveTo]] = [squares[moveTo], squares[index]];
     }
   }
+
+  recordSolvedGroupsInLocalHistory(squares);
 }
 
 
@@ -195,7 +242,7 @@ const App: FC<{}> = () => {
   const cluesSet = (clues: Array<string>) => {
     const coreSquares_ = clues.map((clue, index) => {
       const group = Math.floor(index/4);
-      return new CoreSquare(group, clue);
+      return new CoreSquare(group, null, clue);
     }); 
     setCoreSquares(coreSquares_);
     setCluesEntered(true);
@@ -219,6 +266,8 @@ const App: FC<{}> = () => {
         selected.forEach(s => s.selected = false);
 
         if (selected.every(s => s.answerGroup === selected[0].answerGroup)) {
+          // The selected sqaures are in the same group, so the group has been solved.
+
           const solvedGroup = lastSolvedGroup + 1;
           setLastSolvedGroup(solvedGroup);
 
@@ -244,7 +293,6 @@ const App: FC<{}> = () => {
     }
   }
 
-  const hasGuess = Boolean(coreSquares.find(s => (s.selected || s.badGuess)));
   const hasBadGuess = Boolean(coreSquares.find(s => s.badGuess));
 
   const doClearGuess = () => {
@@ -256,13 +304,18 @@ const App: FC<{}> = () => {
     setCoreSquares(newSquares);
   }
 
+  const doRestart = () => {
+    localStorage.clear();
+    window.location.reload();
+  }
+
   if(cluesSetByURL) {
     return (<SolvingArea
       coreSquares={coreSquares} 
-      hasGuess={hasGuess}
       hasBadGuess={hasBadGuess}
       clueSelected={clueSelected}
       doClearGuess={doClearGuess}
+      doRestart={doRestart}
     />);
   }
 
