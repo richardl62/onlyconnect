@@ -103,7 +103,6 @@ const App: FC<{}> = () => {
 
           selected.forEach(s => s.solvedGroup = solvedGroup);
           positionSquaresInSolvedGroup(squares, solvedGroup);
-          storeSquares(squares);
 
           // If the last but one group has been solve, then the last group 
           // must also be solved.
@@ -113,6 +112,8 @@ const App: FC<{}> = () => {
                 s.solvedGroup = nGroups;
               }
             })
+
+            storeSquares(squares);
           }
         } else {
           selected.forEach(s => s.badGuess = true);

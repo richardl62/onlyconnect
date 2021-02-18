@@ -1,4 +1,7 @@
-import { CoreSquare, nSquares, groupSize, nGroups } from './basics';
+import {
+  CoreSquare, nSquares, groupSize, nGroups,
+  validSolvedGroup
+} from './basics';
 import { DumbEncrypt } from './tools';
 
 const LocalStorageKey = "solvedGroups";
@@ -104,40 +107,48 @@ function processURLParams() {
   }
 }
 
-function storeSquares(squares: Array<CoreSquare> | null) {
+function checkSolvedGroup(sq: CoreSquare) {
+  if (sq.solvedGroup !== null && !validSolvedGroup(sq.solvedGroup)) {
+    throw new Error("Bad solved group in recorded square");
+  }
+}
 
-  if(squares === null) {
+function storeSquares(squares: Array<CoreSquare> | null) {
+  if (squares === null) {
     localStorage.removeItem(LocalStorageKey);
-  } {
+  } else {
+    squares.forEach(checkSolvedGroup); // Temporary: To help with finding a bug
+
     const stringified = JSON.stringify(squares);
     //console.log(stringified);
     localStorage.setItem(LocalStorageKey, stringified);
   }
 }
 
-function doGetStoredSquares() : Array<CoreSquare> | null {
-    const rawStorage = localStorage.getItem(LocalStorageKey);
-    console.log("rawStorage", rawStorage);
+function doGetStoredSquares(): Array<CoreSquare> | null {
+  const rawStorage = localStorage.getItem(LocalStorageKey);
 
-    if(rawStorage === null) {
-      return null;
-    }
+  if (rawStorage === null) {
+    return null;
+  }
 
-    let squares: Array<any> = JSON.parse(rawStorage);
-    if (!squares) {
-      return null;
-    }
-    
-    if (squares.length !== nSquares) {
-      throw new Error("Stored array does not have the expected length");
-    }
+  let squares: Array<any> = JSON.parse(rawStorage);
+  if (!squares) {
+    return null;
+  }
 
-    // KLUDGE? 'Convert' the objects into classes
-    squares.forEach(sq =>
-      Object.setPrototypeOf(sq, CoreSquare.prototype)
-    );
+  if (squares.length !== nSquares) {
+    throw new Error("Stored array does not have the expected length");
+  }
 
-    return squares;
+  // KLUDGE? 'Convert' the objects into classes
+  squares.forEach(sq => {
+    Object.setPrototypeOf(sq, CoreSquare.prototype)
+    //Basic sanity check
+    checkSolvedGroup(sq);
+  });
+
+  return squares;
 
 }
 

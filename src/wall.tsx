@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-
+import {validSolvedGroup} from './basics';
 
 interface CoreSquare {
     clue: string;
@@ -28,8 +28,14 @@ const Square : FC<SquareProps> = ({coreSquare, index, onSelect}: SquareProps) =>
     if (coreSquare.badGuess) {
         className += " bad-guess";
     }
-    if (coreSquare.solvedGroup) {
-        className += " group" + coreSquare.solvedGroup;
+
+    const solvedGroup = coreSquare.solvedGroup;
+    if (solvedGroup !== null) {
+        if(validSolvedGroup(solvedGroup)) {
+            className += " group" + coreSquare.solvedGroup;
+        } else {
+            console.log("Invalid solved group for", coreSquare);
+        }
     }
 
     return (

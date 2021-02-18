@@ -14,7 +14,6 @@ class CoreSquare {
   selected = false;
   badGuess = false;
   solvedGroup: number | null = null;
-
   constructor(answerGroup: number, originalIndex: number | null = null, clue = "") {
     this.answerGroup = answerGroup;
     this.originalIndex = originalIndex;
@@ -22,8 +21,12 @@ class CoreSquare {
   }
 }
 
+
 export {CoreSquare};
 export const groupSize = 4;
 export const nGroups = 4;
 export const nSquares = groupSize * nGroups;
 
+export function validSolvedGroup(group: number) {
+  return group >= 1 && group <= nGroups;
+}
