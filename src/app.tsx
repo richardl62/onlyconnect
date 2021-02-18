@@ -17,6 +17,14 @@ function groupFromIndex(index: number) {
 const startingSetupData = startingSetup();
 let { startingSquares, cluesSetByURL } = startingSetupData;
 
+function lastSolvedGroup(squares: Array<CoreSquare>) {
+  for(let group = nGroups; group > 0; --group) {
+      if(squares.find(s => s && s.solvedGroup === group)) {
+        return group;
+      }
+  }
+  return 0;
+}
 
 // Check that 
 // - Squares in solved groups below 'groupBeingProcessed' are correctly placed
@@ -59,9 +67,7 @@ const App: FC<{}> = () => {
   const [coreSquares, setCoreSquares] = useState(startingSquares);
   const [cluesEntered, setCluesEntered] = useState(false);
 
-  const [lastSolvedGroup, setLastSolvedGroup] = useState(0);
   useEffect(() => { document.title = "OnlyConnect" });
-
 
   const cluesSet = (clues: Array<string>) => {
     const coreSquares_ = clues.map((clue, index) => {
@@ -92,8 +98,8 @@ const App: FC<{}> = () => {
         if (selected.every(s => s.answerGroup === selected[0].answerGroup)) {
           // The selected sqaures are in the same group, so the group has been solved.
 
-          const solvedGroup = lastSolvedGroup + 1;
-          setLastSolvedGroup(solvedGroup);
+          const solvedGroup = lastSolvedGroup(squares) + 1;
+
 
           selected.forEach(s => s.solvedGroup = solvedGroup);
           positionSquaresInSolvedGroup(squares, solvedGroup);
@@ -107,7 +113,6 @@ const App: FC<{}> = () => {
                 s.solvedGroup = nGroups;
               }
             })
-            setLastSolvedGroup(nGroups);
           }
         } else {
           selected.forEach(s => s.badGuess = true);
