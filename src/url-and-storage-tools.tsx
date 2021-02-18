@@ -1,9 +1,9 @@
 import { CoreSquare, nSquares, groupSize, nGroups } from './basics';
 import { DumbEncrypt } from './tools';
 
-const SolvedGroupKey = "solvedGroups";
+const LocalStorageKey = "solvedGroups";
 
-let startingSquares: Array<CoreSquare> = [];
+let squaresSetByURL: Array<CoreSquare> = [];
 let cluesSetByURL = false;
 
 let startingClues: Array<string>;
@@ -80,7 +80,7 @@ function processURLParams() {
     cluesSetByURL = true;
 
     for (let i = 0; i < nSquares; ++i) {
-      startingSquares.push(
+      squaresSetByURL.push(
         new CoreSquare(urlSolutionGroups[i], i, urlClues[i])
       );
     }
@@ -93,7 +93,7 @@ function processURLParams() {
     for (let groupNo = 0; groupNo < nGroups; ++groupNo) {
       for (let n = 0; n < groupSize; ++n) {
         let s = new CoreSquare(groupNo);
-        startingSquares.push(s);
+        squaresSetByURL.push(s);
 
         // To help with testing
         if (startingClues) {
@@ -104,63 +104,67 @@ function processURLParams() {
   }
 }
 
-// function processSolveGroups(solvedGroups : Array<any>) {
-//     console.log(solvedGroups);
-//     if(solvedGroups[0] !== null) {
-//       for(let i = 0; i < 4; ++i) {
-//         const index = solvedGroups[i];
-//         let sq = startingSquares[index];
-//         if(sq === undefined) {
-//           // The index is out of range or somehow currupt.
-//           throw new Error("Unexpected value in local history");
-//         }
-//         sq.solvedGroup = 0;
-//       }
-//       positionSquaresInSolvedGroup(startingSquares, 0);
-//     }
-//   }
+function storeSquares(squares: Array<CoreSquare> | null) {
 
-
-// function getSolvedGroupsFromLocalStorage(): Array<number | null> | null {
-
-//   const solvedGroupsString = localStorage.getItem(SolvedGroupKey);
-//   if (solvedGroupsString) {
-//     let solvedGroups = JSON.parse(solvedGroupsString);
-//     if (solvedGroups.length === nSquares) { // basic sanity check
-//       return solvedGroups;
-//     }
-//     console.log("Problem reading solved groups from local history");
-//   }
-
-//   return null;
-// }
-
-function recordSolvedGroupsInLocalHistory(squares: Array<CoreSquare>) {
-  const solvedGroups = squares.map((sq, index) => {
-    if (typeof sq.originalIndex !== "number") {
-      throw new Error("Original index is not set");
-    }
-    return sq.solvedGroup && sq.originalIndex;
-  });
-  console.log(solvedGroups);
-  localStorage.setItem(SolvedGroupKey, JSON.stringify(solvedGroups));
+  if(squares === null) {
+    localStorage.removeItem(LocalStorageKey);
+  } {
+    const stringified = JSON.stringify(squares);
+    //console.log(stringified);
+    localStorage.setItem(LocalStorageKey, stringified);
+  }
 }
 
-function resetLocalStorage() {
+function doGetStoredSquares() : Array<CoreSquare> | null {
+    const rawStorage = localStorage.getItem(LocalStorageKey);
+    console.log("rawStorage", rawStorage);
+
+    if(rawStorage === null) {
+      return null;
+    }
+
+    let squares: Array<any> = JSON.parse(rawStorage);
+    if (!squares) {
+      return null;
+    }
+    
+    if (squares.length !== nSquares) {
+      throw new Error("Stored array does not have the expected length");
+    }
+
+    // KLUDGE? 'Convert' the objects into classes
+    squares.forEach(sq =>
+      Object.setPrototypeOf(sq, CoreSquare.prototype)
+    );
+
+    return squares;
+
+}
+
+function getStoredSquares() {
+  let result = null;
+  try {
+    result = doGetStoredSquares();
+  } catch {
+    alert("Error reading stored data");
+  }
+
+  return result;
+}
+
+function clearAllStorage() {
   localStorage.clear();
 }
 
 function startingSetup() {
   processURLParams();
+
+  const storedSquares = getStoredSquares();
   return {
     cluesSetByURL: cluesSetByURL,
-    startingSquares: startingSquares,
-    //solvedGroups: cluesSetByURL && getSolvedGroupsFromLocalStorage(),
+    startingSquares: storedSquares || squaresSetByURL,
   }
 }
 
-export {
-  startingSetup, makeUrlParams, recordSolvedGroupsInLocalHistory,
-  resetLocalStorage
-}
+export { startingSetup, makeUrlParams, storeSquares, clearAllStorage }
 

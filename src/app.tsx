@@ -6,7 +6,7 @@ import SettingArea from './setting-area'
 import { shuffleArray } from './tools';
 
 import Wall from './wall';
-import {startingSetup, makeUrlParams, resetLocalStorage } from './url-and-storage-tools';
+import {startingSetup, makeUrlParams, storeSquares } from './url-and-storage-tools';
 import './App.css';
 
 
@@ -103,7 +103,7 @@ const App: FC<{}> = () => {
 
           selected.forEach(s => s.solvedGroup = solvedGroup);
           positionSquaresInSolvedGroup(squares, solvedGroup);
-          //recordLocalHistory(squares);
+          storeSquares(squares);
 
           // If the last but one group has been solve, then the last group 
           // must also be solved.
@@ -135,7 +135,7 @@ const App: FC<{}> = () => {
   }
 
   const doRestart = () => {
-    resetLocalStorage();
+    storeSquares(null);
     window.location.reload();
   }
 
