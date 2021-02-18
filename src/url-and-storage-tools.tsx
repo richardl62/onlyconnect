@@ -121,28 +121,19 @@ function processURLParams() {
 //   }
 
 
-function getSolvedGroupsFromLocalStorage(): Array<number | null> | null {
+// function getSolvedGroupsFromLocalStorage(): Array<number | null> | null {
 
-  const solvedGroupsString = localStorage.getItem(SolvedGroupKey);
-  if (solvedGroupsString) {
-    let solvedGroups = JSON.parse(solvedGroupsString);
-    if (solvedGroups.length === nSquares) { // basic sanity check
-      return solvedGroups;
-    }
-    console.log("Problem reading solved groups from local history");
-  }
+//   const solvedGroupsString = localStorage.getItem(SolvedGroupKey);
+//   if (solvedGroupsString) {
+//     let solvedGroups = JSON.parse(solvedGroupsString);
+//     if (solvedGroups.length === nSquares) { // basic sanity check
+//       return solvedGroups;
+//     }
+//     console.log("Problem reading solved groups from local history");
+//   }
 
-  return null;
-}
-
-function startingSetup() {
-  processURLParams();
-  return {
-    cluesSetByURL: cluesSetByURL,
-    startingSquares: startingSquares,
-    solvedGroups: cluesSetByURL && getSolvedGroupsFromLocalStorage(),
-  }
-}
+//   return null;
+// }
 
 function recordSolvedGroupsInLocalHistory(squares: Array<CoreSquare>) {
   const solvedGroups = squares.map((sq, index) => {
@@ -157,6 +148,15 @@ function recordSolvedGroupsInLocalHistory(squares: Array<CoreSquare>) {
 
 function resetLocalStorage() {
   localStorage.clear();
+}
+
+function startingSetup() {
+  processURLParams();
+  return {
+    cluesSetByURL: cluesSetByURL,
+    startingSquares: startingSquares,
+    //solvedGroups: cluesSetByURL && getSolvedGroupsFromLocalStorage(),
+  }
 }
 
 export {
