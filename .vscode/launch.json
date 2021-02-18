@@ -4,11 +4,21 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
+
         {
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        },
+
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Chrome against test page",
+            "url": "http://localhost:3000/onlyconnect?clues=3%7E2%7E4%7E3%7E1%7E2%7E2%7E4%7E1%7E3%7E2%7E4%7E4%7E1%7E1%7E3&key=52497322932849",
             "webRoot": "${workspaceFolder}"
         }
     ]
