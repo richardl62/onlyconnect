@@ -1,15 +1,21 @@
 import {
-  CoreSquare, nSquares, groupSize, nGroups,
-  validSolvedGroup
+  CoreSquare, makeCoreSquare,
+  nSquares, groupSize, nGroups, validSolvedGroup
 } from './basics';
 import { DumbEncrypt } from './tools';
-
-const LocalStorageKey = "solvedGroups";
 
 let squaresSetByURL: Array<CoreSquare> = [];
 let cluesSetByURL = false;
 
-let startingClues: Array<string>;
+// computing every time is inefficient.
+function localStorageKey() : string {
+  if(squaresSetByURL.length !== nSquares) {
+    throw new Error("Cannot find storage key - clue words are not set");
+  }
+
+  const key = squaresSetByURL.map(sq => sq.clue).join();
+  return key;
+}
 
 function makeUrlParams(squares: Array<CoreSquare>) {
 
@@ -31,7 +37,7 @@ function unpackURLClues(urlParams: URLSearchParams) {
   const urlClues = urlParams.get("clues");
   if (urlClues) {
     const clues = urlClues.split("~");
-
+    
     if (clues.length === nSquares) {
       return clues;
     } else {
@@ -84,7 +90,7 @@ function processURLParams() {
 
     for (let i = 0; i < nSquares; ++i) {
       squaresSetByURL.push(
-        new CoreSquare(urlSolutionGroups[i], i, urlClues[i])
+        makeCoreSquare(urlSolutionGroups[i], urlClues[i])
       );
     }
   }
@@ -95,13 +101,8 @@ function processURLParams() {
 
     for (let groupNo = 0; groupNo < nGroups; ++groupNo) {
       for (let n = 0; n < groupSize; ++n) {
-        let s = new CoreSquare(groupNo);
+        let s = makeCoreSquare(groupNo);
         squaresSetByURL.push(s);
-
-        // To help with testing
-        if (startingClues) {
-          s.clue = startingClues[n + groupNo * groupSize];
-        }
       }
     }
   }
@@ -115,18 +116,18 @@ function checkSolvedGroup(sq: CoreSquare) {
 
 function storeSquares(squares: Array<CoreSquare> | null) {
   if (squares === null) {
-    localStorage.removeItem(LocalStorageKey);
+    localStorage.removeItem(localStorageKey());
   } else {
     squares.forEach(checkSolvedGroup); // Temporary: To help with finding a bug
 
     const stringified = JSON.stringify(squares);
     //console.log(stringified);
-    localStorage.setItem(LocalStorageKey, stringified);
+    localStorage.setItem(localStorageKey(), stringified);
   }
 }
 
 function doGetStoredSquares(): Array<CoreSquare> | null {
-  const rawStorage = localStorage.getItem(LocalStorageKey);
+  const rawStorage = localStorage.getItem(localStorageKey());
 
   if (rawStorage === null) {
     return null;
@@ -141,12 +142,8 @@ function doGetStoredSquares(): Array<CoreSquare> | null {
     throw new Error("Stored array does not have the expected length");
   }
 
-  // KLUDGE? 'Convert' the objects into classes
-  squares.forEach(sq => {
-    Object.setPrototypeOf(sq, CoreSquare.prototype)
-    //Basic sanity check
-    checkSolvedGroup(sq);
-  });
+  //Basic sanity check
+  squares.forEach(sq => checkSolvedGroup(sq));
 
   return squares;
 

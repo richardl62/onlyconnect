@@ -18,7 +18,7 @@ function SolvingArea({coreSquares, hasBadGuess, clueSelected, doClearGuess, doRe
         </button>
     );
     const RestartButton = () => (
-        <button type="button" onClick={doRestart}>
+        <button className="restart-button" type="button" onClick={doRestart}>
             Restart
         </button>
     );

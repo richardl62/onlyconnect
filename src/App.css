@@ -73,3 +73,7 @@
   width: fit-content;
   margin: 10px 0;
 }
+
+.restart-button {
+  color: red;
+}

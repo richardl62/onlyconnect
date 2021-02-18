@@ -1,6 +1,6 @@
 // TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState } from 'react';
-import { CoreSquare, nGroups, groupSize } from './basics';
+import { CoreSquare, makeCoreSquare, nGroups, groupSize } from './basics';
 import SolvingArea from './solving-area'
 import SettingArea from './setting-area'
 import { shuffleArray } from './tools';
@@ -72,7 +72,7 @@ const App: FC<{}> = () => {
   const cluesSet = (clues: Array<string>) => {
     const coreSquares_ = clues.map((clue, index) => {
       const group = Math.floor(index / 4);
-      return new CoreSquare(group, null, clue);
+      return makeCoreSquare(group, clue);
     });
     setCoreSquares(coreSquares_);
     setCluesEntered(true);
@@ -113,13 +113,13 @@ const App: FC<{}> = () => {
               }
             })
 
-            storeSquares(squares);
+
           }
         } else {
           selected.forEach(s => s.badGuess = true);
         }
       }
-
+      storeSquares(squares);
       setCoreSquares(squares);
     }
   }

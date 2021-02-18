@@ -7,22 +7,30 @@ function filterClue(clue: string) {
   return clue.replace(/~/g, "");
 }
 
-class CoreSquare {
+
+// Warning: Change this interface is likely to break any recorded data
+interface CoreSquare {
   readonly answerGroup: number;
-  readonly originalIndex: number | null;
   clue: string;
-  selected = false;
-  badGuess = false;
-  solvedGroup: number | null = null;
-  constructor(answerGroup: number, originalIndex: number | null = null, clue = "") {
-    this.answerGroup = answerGroup;
-    this.originalIndex = originalIndex;
-    this.clue = filterClue(clue);
+  selected: boolean;
+  badGuess: boolean;
+  solvedGroup: number | null;
+}
+
+
+function makeCoreSquare(answerGroup: number, clue: string = "") : CoreSquare {
+  return {
+    answerGroup: answerGroup,
+    clue: filterClue(clue),
+    selected: false,
+    badGuess: false,
+    solvedGroup: null,
   }
 }
 
 
-export {CoreSquare};
+export type {CoreSquare};
+export {makeCoreSquare};
 export const groupSize = 4;
 export const nGroups = 4;
 export const nSquares = groupSize * nGroups;
