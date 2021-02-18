@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/onlyconnect/static/css/main.147805c8.chunk.css",
-    "main.js": "/onlyconnect/static/js/main.96de537f.chunk.js",
-    "main.js.map": "/onlyconnect/static/js/main.96de537f.chunk.js.map",
+    "main.css": "/onlyconnect/static/css/main.8b78fdd5.chunk.css",
+    "main.js": "/onlyconnect/static/js/main.64f833e2.chunk.js",
+    "main.js.map": "/onlyconnect/static/js/main.64f833e2.chunk.js.map",
     "runtime-main.js": "/onlyconnect/static/js/runtime-main.15141b09.js",
     "runtime-main.js.map": "/onlyconnect/static/js/runtime-main.15141b09.js.map",
-    "static/js/2.0aabe348.chunk.js": "/onlyconnect/static/js/2.0aabe348.chunk.js",
-    "static/js/2.0aabe348.chunk.js.map": "/onlyconnect/static/js/2.0aabe348.chunk.js.map",
+    "static/js/2.875d4dac.chunk.js": "/onlyconnect/static/js/2.875d4dac.chunk.js",
+    "static/js/2.875d4dac.chunk.js.map": "/onlyconnect/static/js/2.875d4dac.chunk.js.map",
     "static/js/3.eec67499.chunk.js": "/onlyconnect/static/js/3.eec67499.chunk.js",
     "static/js/3.eec67499.chunk.js.map": "/onlyconnect/static/js/3.eec67499.chunk.js.map",
     "index.html": "/onlyconnect/index.html",
-    "static/css/main.147805c8.chunk.css.map": "/onlyconnect/static/css/main.147805c8.chunk.css.map",
-    "static/js/2.0aabe348.chunk.js.LICENSE.txt": "/onlyconnect/static/js/2.0aabe348.chunk.js.LICENSE.txt"
+    "static/css/main.8b78fdd5.chunk.css.map": "/onlyconnect/static/css/main.8b78fdd5.chunk.css.map",
+    "static/js/2.875d4dac.chunk.js.LICENSE.txt": "/onlyconnect/static/js/2.875d4dac.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.15141b09.js",
-    "static/js/2.0aabe348.chunk.js",
-    "static/css/main.147805c8.chunk.css",
-    "static/js/main.96de537f.chunk.js"
+    "static/js/2.875d4dac.chunk.js",
+    "static/css/main.8b78fdd5.chunk.css",
+    "static/js/main.64f833e2.chunk.js"
   ]
 }
