@@ -8,8 +8,8 @@ let squaresSetByURL: Array<CoreSquare> = [];
 let cluesSetByURL = false;
 
 // computing every time is inefficient.
-function localStorageKey() : string {
-  if(squaresSetByURL.length !== nSquares) {
+function localStorageKey(): string {
+  if (squaresSetByURL.length !== nSquares) {
     throw new Error("Cannot find storage key - clue words are not set");
   }
 
@@ -37,7 +37,7 @@ function unpackURLClues(urlParams: URLSearchParams) {
   const urlClues = urlParams.get("clues");
   if (urlClues) {
     const clues = urlClues.split("~");
-    
+
     if (clues.length === nSquares) {
       return clues;
     } else {
@@ -93,19 +93,22 @@ function processURLParams() {
         makeCoreSquare(urlSolutionGroups[i], urlClues[i])
       );
     }
-  }
-  else {
-    if (urlParams.toString()) {
-      alert("Could not understand URL parameters");
-    }
-
+  } else if (!urlClues && !urlSolutionGroups) {
     for (let groupNo = 0; groupNo < nGroups; ++groupNo) {
       for (let n = 0; n < groupSize; ++n) {
         let s = makeCoreSquare(groupNo);
         squaresSetByURL.push(s);
       }
     }
+  } else {
+    console.log("window.location.search", window.location.search,
+      "\nurlClue", urlClues,
+      "\nurlSolutionGroups", urlSolutionGroups
+    );
+
+    alert("Could not understand URL parameters");
   }
+
 }
 
 function checkSolvedGroup(sq: CoreSquare) {
