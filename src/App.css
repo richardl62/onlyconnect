@@ -69,11 +69,17 @@
   font-weight:500;
 }
 
-.done-button {
-  width: fit-content;
+.setting-area-buttons {
   margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
 }
 
-.restart-button {
+.done-button {
+  width: fit-content;
+
+}
+
+.restart-button, .clear-stored-solutions-button {
   color: red;
 }
