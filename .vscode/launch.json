@@ -10,7 +10,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost:3000",
+            "url": "http://localhost:3000/onlyconnect",
             "webRoot": "${workspaceFolder}"
         },
 
@@ -18,7 +18,7 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against test page",
-            "url": "http://localhost:3000/onlyconnect?clues=3%7E2%7E4%7E3%7E1%7E2%7E2%7E4%7E1%7E3%7E2%7E4%7E4%7E1%7E1%7E3&key=52497322932849",
+            "url": "http://localhost:3000/onlyconnect?clues=3%7E3%7E1%7E2%7E2%7E4%7E4%7E3%7E1%7E1+1%7E2%7E4%7E1%7E4%7E2%7E3&key=53626979195709",
             "webRoot": "${workspaceFolder}"
         }
     ]
