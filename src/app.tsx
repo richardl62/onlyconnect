@@ -2,22 +2,20 @@
 import React, { FC, useEffect, useState } from 'react';
 import { CoreSquare, makeCoreSquare } from './core-square';
 import { nGroups, groupSize } from './constants';
-import SolvingArea from './solving-area'
-import SettingArea from './setting-area'
 import { shuffleArray } from './tools';
 
+import SolvingArea from './solving-area'
+import SettingArea from './setting-area'
 import Wall from './wall';
-import {startingSetup, makeUrlParams } from './url-tools';
-import { makeStorageKey, storeSquares } from "./storage-tools";
-import './App.css';
 
+import {makeUrlParams } from './url-tools';
+import startingSetup from './starting-setup';
+
+import './App.css';
 
 function groupFromIndex(index: number) {
   return Math.floor(index / groupSize) + 1;
 }
-
-const startingSetupData = startingSetup();
-let { startingSquares, cluesSetByURL } = startingSetupData;
 
 function lastSolvedGroup(squares: Array<CoreSquare>) {
   for(let group = nGroups; group > 0; --group) {
@@ -64,6 +62,8 @@ function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: numbe
   }
 }
 
+const [startingSquares, cluesSetFromStart, localStorage ] = startingSetup();
+
 const App: FC<{}> = () => {
 
   const [coreSquares, setCoreSquares] = useState(startingSquares);
@@ -83,7 +83,7 @@ const App: FC<{}> = () => {
 
   const clueSelected: (index: number) => void = (index) => {
     // Ignore squares that have already been solved.
-    if (cluesSetByURL && !coreSquares[index].solvedGroup) {
+    if (cluesSetFromStart && !coreSquares[index].solvedGroup) {
 
       let squares = [...coreSquares];
       squares.forEach(s => s.badGuess = false);
@@ -121,7 +121,9 @@ const App: FC<{}> = () => {
           selected.forEach(s => s.badGuess = true);
         }
       }
-      storeSquares(makeStorageKey(squares), squares);
+
+
+      localStorage!.set(squares);
       setCoreSquares(squares);
     }
   }
@@ -138,11 +140,11 @@ const App: FC<{}> = () => {
   }
 
   const doRestart = () => {
-    storeSquares(makeStorageKey(coreSquares), null);
+    localStorage!.set(null);
     window.location.reload();
   }
 
-  if (cluesSetByURL) {
+  if (cluesSetFromStart) {
     return (<SolvingArea
       coreSquares={coreSquares}
       hasBadGuess={hasBadGuess}

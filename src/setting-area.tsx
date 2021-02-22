@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { clearAllStorage } from "./storage-tools";
+import LocalStorage from "./local-storage";
 
 function trimmed(words: Array<string>) {
     console.log("Pre-trimmed", words);
@@ -80,7 +80,7 @@ function SettingArea({ recordClues }: SettingAreaProps) {
 
             <div className="setting-area-buttons">
                 <button className="done-button" onClick={onDone}>Done</button>
-                <button className="clear-stored-solutions-button" onClick={clearAllStorage}>
+                <button className="clear-stored-solutions-button" onClick={LocalStorage.clearAll}>
                     Clear stored solutions
             </button>
             </div>

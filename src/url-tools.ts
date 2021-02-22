@@ -1,12 +1,6 @@
 import { CoreSquare, makeCoreSquare } from './core-square';
 import {  nSquares, groupSize, nGroups } from './constants';
-
 import { DumbEncrypt } from './tools';
-import { makeStorageKey, getStoredSquares } from './storage-tools';
-
-export let squaresSetByURL: Array<CoreSquare> = [];
-let cluesSetByURL = false;
-
 
 
 function makeUrlParams(squares: Array<CoreSquare>) {
@@ -68,57 +62,32 @@ function unpackURLSolutionGroups(urlParams: URLSearchParams) {
   return values;
 }
 
-// KLUDGE - Use to set gloabls. Would be better called in the App.
-function processURLParams() {
-
-  const urlParams = new URLSearchParams(window.location.search);
+function makeSquares(urlParams: URLSearchParams) : Array<CoreSquare> | null {
 
   const urlClues = unpackURLClues(urlParams);
   const urlSolutionGroups = unpackURLSolutionGroups(urlParams);
 
-  cluesSetByURL = false;
-  if (urlClues && urlSolutionGroups) {
-    cluesSetByURL = true;
 
-    for (let i = 0; i < nSquares; ++i) {
-      squaresSetByURL.push(
-        makeCoreSquare(urlSolutionGroups[i], urlClues[i])
-      );
-    }
-  } else if (!urlClues && !urlSolutionGroups) {
-    for (let groupNo = 0; groupNo < nGroups; ++groupNo) {
-      for (let n = 0; n < groupSize; ++n) {
-        let s = makeCoreSquare(groupNo);
-        squaresSetByURL.push(s);
-      }
-    }
-  } else {
+  if (Boolean(urlClues) !== Boolean(urlSolutionGroups)) {
     console.log("window.location.search", window.location.search,
       "\nurlClue", urlClues,
       "\nurlSolutionGroups", urlSolutionGroups
     );
 
-    alert("Could not understand URL parameters");
+    throw new Error("Could not understand URL parameters");
   }
 
-}
-
-function startingSetup() {
-  processURLParams();
-
-  let startingSquares = squaresSetByURL;
-  if(cluesSetByURL) {
-    const storedSquares = getStoredSquares(makeStorageKey(startingSquares));
-    if(storedSquares) {
-      startingSquares = storedSquares;
+  if (urlClues && urlSolutionGroups) {
+    let squares = [];
+    for (let i = 0; i < nSquares; ++i) {
+      squares.push(makeCoreSquare(urlSolutionGroups[i], urlClues[i]));
     }
-  }
+    return squares;
+  } else {
+    return null;
+  } 
 
-  return {
-    cluesSetByURL: cluesSetByURL,
-    startingSquares: startingSquares,
-  }
 }
 
-export { startingSetup, makeUrlParams }
+export { makeSquares, makeUrlParams }
 
