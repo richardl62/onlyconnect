@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import {validSolvedGroup} from './basics';
+import {validSolvedGroup} from './constants';
 
 interface CoreSquare {
     clue: string;

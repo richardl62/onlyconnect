@@ -1,6 +1,7 @@
 // TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState } from 'react';
-import { CoreSquare, makeCoreSquare, nGroups, groupSize } from './basics';
+import { CoreSquare, makeCoreSquare } from './core-square';
+import { nGroups, groupSize } from './constants';
 import SolvingArea from './solving-area'
 import SettingArea from './setting-area'
 import { shuffleArray } from './tools';

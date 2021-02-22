@@ -1,7 +1,6 @@
-import {
-  CoreSquare, makeCoreSquare,
-  nSquares, groupSize, nGroups, validSolvedGroup
-} from './basics';
+import { CoreSquare, makeCoreSquare } from './core-square';
+import {  nSquares, groupSize, nGroups, validSolvedGroup } from './constants';
+
 import { DumbEncrypt } from './tools';
 
 let squaresSetByURL: Array<CoreSquare> = [];
