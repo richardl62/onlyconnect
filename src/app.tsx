@@ -7,7 +7,8 @@ import SettingArea from './setting-area'
 import { shuffleArray } from './tools';
 
 import Wall from './wall';
-import {startingSetup, makeUrlParams, storeSquares } from './url-and-storage-tools';
+import {startingSetup, makeUrlParams } from './url-tools';
+import { makeStorageKey, storeSquares } from "./storage-tools";
 import './App.css';
 
 
@@ -81,9 +82,9 @@ const App: FC<{}> = () => {
 
 
   const clueSelected: (index: number) => void = (index) => {
-
     // Ignore squares that have already been solved.
     if (cluesSetByURL && !coreSquares[index].solvedGroup) {
+
       let squares = [...coreSquares];
       squares.forEach(s => s.badGuess = false);
       squares[index].selected = !squares[index].selected;
@@ -120,7 +121,7 @@ const App: FC<{}> = () => {
           selected.forEach(s => s.badGuess = true);
         }
       }
-      storeSquares(squares);
+      storeSquares(makeStorageKey(squares), squares);
       setCoreSquares(squares);
     }
   }
@@ -137,7 +138,7 @@ const App: FC<{}> = () => {
   }
 
   const doRestart = () => {
-    storeSquares(null);
+    storeSquares(makeStorageKey(coreSquares), null);
     window.location.reload();
   }
 

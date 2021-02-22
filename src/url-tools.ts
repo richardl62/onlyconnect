@@ -1,20 +1,13 @@
 import { CoreSquare, makeCoreSquare } from './core-square';
-import {  nSquares, groupSize, nGroups, validSolvedGroup } from './constants';
+import {  nSquares, groupSize, nGroups } from './constants';
 
 import { DumbEncrypt } from './tools';
+import { makeStorageKey, getStoredSquares } from './storage-tools';
 
-let squaresSetByURL: Array<CoreSquare> = [];
+export let squaresSetByURL: Array<CoreSquare> = [];
 let cluesSetByURL = false;
 
-// computing every time is inefficient.
-function localStorageKey(): string {
-  if (squaresSetByURL.length !== nSquares) {
-    throw new Error("Cannot find storage key - clue words are not set");
-  }
 
-  const key = squaresSetByURL.map(sq => sq.clue).join();
-  return key;
-}
 
 function makeUrlParams(squares: Array<CoreSquare>) {
 
@@ -110,71 +103,22 @@ function processURLParams() {
 
 }
 
-function checkSolvedGroup(sq: CoreSquare) {
-  if (sq.solvedGroup !== null && !validSolvedGroup(sq.solvedGroup)) {
-    throw new Error("Bad solved group in recorded square");
-  }
-}
-
-function storeSquares(squares: Array<CoreSquare> | null) {
-  if (squares === null) {
-    localStorage.removeItem(localStorageKey());
-  } else {
-    squares.forEach(checkSolvedGroup); // Temporary: To help with finding a bug
-
-    const stringified = JSON.stringify(squares);
-    //console.log(stringified);
-    localStorage.setItem(localStorageKey(), stringified);
-  }
-}
-
-function doGetStoredSquares(): Array<CoreSquare> | null {
-  const rawStorage = localStorage.getItem(localStorageKey());
-
-  if (rawStorage === null) {
-    return null;
-  }
-
-  let squares: Array<any> = JSON.parse(rawStorage);
-  if (!squares) {
-    return null;
-  }
-
-  if (squares.length !== nSquares) {
-    throw new Error("Stored array does not have the expected length");
-  }
-
-  //Basic sanity check
-  squares.forEach(sq => checkSolvedGroup(sq));
-
-  return squares;
-
-}
-
-function getStoredSquares() {
-  let result = null;
-  try {
-    result = doGetStoredSquares();
-  } catch {
-    alert("Error reading stored data");
-  }
-
-  return result;
-}
-
-function clearAllStorage() {
-  localStorage.clear();
-}
-
 function startingSetup() {
   processURLParams();
 
-  const storedSquares = getStoredSquares();
+  let startingSquares = squaresSetByURL;
+  if(cluesSetByURL) {
+    const storedSquares = getStoredSquares(makeStorageKey(startingSquares));
+    if(storedSquares) {
+      startingSquares = storedSquares;
+    }
+  }
+
   return {
     cluesSetByURL: cluesSetByURL,
-    startingSquares: storedSquares || squaresSetByURL,
+    startingSquares: startingSquares,
   }
 }
 
-export { startingSetup, makeUrlParams, storeSquares, clearAllStorage }
+export { startingSetup, makeUrlParams }
 

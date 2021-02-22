@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { clearAllStorage } from './url-and-storage-tools'
+import { clearAllStorage } from "./storage-tools";
 
 function trimmed(words: Array<string>) {
     console.log("Pre-trimmed", words);
