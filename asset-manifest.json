@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/onlyconnect/static/css/main.252d6124.chunk.css",
-    "main.js": "/onlyconnect/static/js/main.3d74eefc.chunk.js",
-    "main.js.map": "/onlyconnect/static/js/main.3d74eefc.chunk.js.map",
+    "main.css": "/onlyconnect/static/css/main.b12b5d2a.chunk.css",
+    "main.js": "/onlyconnect/static/js/main.b2b11200.chunk.js",
+    "main.js.map": "/onlyconnect/static/js/main.b2b11200.chunk.js.map",
     "runtime-main.js": "/onlyconnect/static/js/runtime-main.15141b09.js",
     "runtime-main.js.map": "/onlyconnect/static/js/runtime-main.15141b09.js.map",
     "static/js/2.afc71e86.chunk.js": "/onlyconnect/static/js/2.afc71e86.chunk.js",
@@ -10,13 +10,13 @@
     "static/js/3.eec67499.chunk.js": "/onlyconnect/static/js/3.eec67499.chunk.js",
     "static/js/3.eec67499.chunk.js.map": "/onlyconnect/static/js/3.eec67499.chunk.js.map",
     "index.html": "/onlyconnect/index.html",
-    "static/css/main.252d6124.chunk.css.map": "/onlyconnect/static/css/main.252d6124.chunk.css.map",
+    "static/css/main.b12b5d2a.chunk.css.map": "/onlyconnect/static/css/main.b12b5d2a.chunk.css.map",
     "static/js/2.afc71e86.chunk.js.LICENSE.txt": "/onlyconnect/static/js/2.afc71e86.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.15141b09.js",
     "static/js/2.afc71e86.chunk.js",
-    "static/css/main.252d6124.chunk.css",
-    "static/js/main.3d74eefc.chunk.js"
+    "static/css/main.b12b5d2a.chunk.css",
+    "static/js/main.b2b11200.chunk.js"
   ]
 }
