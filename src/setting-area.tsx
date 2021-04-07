@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LocalStorage from "./local-storage";
+import { makeGridStr, shuffleStr } from './strings';
 
 function trimmed(words: Array<string>) {
     console.log("Pre-trimmed", words);
@@ -59,6 +60,8 @@ function SettingArea({ recordClues }: SettingAreaProps) {
             ${commaSeparated.length} found with comma-seperation.`
         );
 
+        recordClues(null);
+
 
     }
 
@@ -71,7 +74,13 @@ function SettingArea({ recordClues }: SettingAreaProps) {
 
     return (
         <div className="setting-area" >
-            <p>Enter clues.  These can be single words, or words and phrases seperated by commas</p>
+            <div>
+                <span>{`Enter clues then ${makeGridStr.toLowerCase()}`}</span>
+                <span>{` and ${shuffleStr.toLowerCase()}.`}</span>
+                <br/>
+                <span>Clues can be single words, or words and phrases seperated by commas.</span>
+            </div>
+    
             <textarea
                 cols={50}
                 rows={4}
@@ -79,7 +88,7 @@ function SettingArea({ recordClues }: SettingAreaProps) {
             />
 
             <div className="setting-area-buttons">
-                <button className="done-button" onClick={onDone}>Done</button>
+                <button className="done-button" onClick={onDone}>{makeGridStr}</button>
                 <button className="clear-stored-solutions-button" onClick={LocalStorage.clearAll}>
                     Clear stored solutions
             </button>

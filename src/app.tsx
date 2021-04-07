@@ -7,6 +7,7 @@ import SettingArea from './setting-area';
 import SolvingArea from './solving-area';
 import startingSetup from './starting-setup';
 import './App.css';
+import { shuffleArray } from './tools';
 
 function groupFromIndex(index: number) {
   return Math.floor(index / groupSize) + 1;
@@ -62,7 +63,12 @@ const [startingSquares, cluesSetFromStart, localStorage ] = startingSetup();
 const App: FC<{}> = (): JSX.Element => {
 
   const [gridSquares, setGridSquares] = useState(startingSquares);
+  const [shuffledSquares, setShuffledSquares] = useState(startingSquares);
   const [cluesEntered, setCluesEntered] = useState(false);
+
+  const doShuffle = () => {
+    setShuffledSquares(shuffleArray([...gridSquares]));
+  }
 
   useEffect(() => { document.title = "OnlyConnect" });
 
@@ -72,6 +78,7 @@ const App: FC<{}> = (): JSX.Element => {
       return makeGridSquare(group, clue);
     });
     setGridSquares(gridSquares_);
+    setShuffledSquares(gridSquares_);
     setCluesEntered(true);
   }
 
@@ -159,7 +166,10 @@ const App: FC<{}> = (): JSX.Element => {
   return (
     <div className="setting-area">
       <SettingArea recordClues={recordClues} />
-      {cluesEntered ? <GridAndLink gridSquares={gridSquares} /> : null}
+      {cluesEntered ? 
+        <GridAndLink gridSquares={shuffledSquares} shuffle={doShuffle} /> 
+        : null
+      }
     </div>
   )
 };
