@@ -1,6 +1,6 @@
 // TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState } from 'react';
-import { CoreSquare, makeCoreSquare } from './core-square';
+import { GridSquare, makeGridSquare } from './core-square';
 import { nGroups, groupSize } from './constants';
 import { shuffleArray } from './tools';
 
@@ -17,7 +17,7 @@ function groupFromIndex(index: number) {
   return Math.floor(index / groupSize) + 1;
 }
 
-function lastSolvedGroup(squares: Array<CoreSquare>) {
+function lastSolvedGroup(squares: Array<GridSquare>) {
   for(let group = nGroups; group > 0; --group) {
       if(squares.find(s => s && s.solvedGroup === group)) {
         return group;
@@ -30,7 +30,7 @@ function lastSolvedGroup(squares: Array<CoreSquare>) {
 // - Squares in solved groups below 'groupBeingProcessed' are correctly placed
 // = No square is in a solved group greated than  'groupBeingProcessed'
 // Throw an error the if check fails.
-function sanityCheckSolvedGroups(squares: Array<CoreSquare>, groupBeingProcessed: number) {
+function sanityCheckSolvedGroups(squares: Array<GridSquare>, groupBeingProcessed: number) {
   for (let index = 0; index < squares.length; ++index) {
     const positional = groupFromIndex(index);
     const current = squares[index].solvedGroup;
@@ -45,7 +45,7 @@ function sanityCheckSolvedGroups(squares: Array<CoreSquare>, groupBeingProcessed
     }
   }
 }
-function positionSquaresInSolvedGroup(squares: Array<CoreSquare>, groupNo: number) {
+function positionSquaresInSolvedGroup(squares: Array<GridSquare>, groupNo: number) {
 
   sanityCheckSolvedGroups(squares, groupNo);
 
@@ -66,26 +66,26 @@ const [startingSquares, cluesSetFromStart, localStorage ] = startingSetup();
 
 const App: FC<{}> = () => {
 
-  const [coreSquares, setCoreSquares] = useState(startingSquares);
+  const [gridSquares, setGridSquares] = useState(startingSquares);
   const [cluesEntered, setCluesEntered] = useState(false);
 
   useEffect(() => { document.title = "OnlyConnect" });
 
   const cluesSet = (clues: Array<string>) => {
-    const coreSquares_ = clues.map((clue, index) => {
+    const gridSquares_ = clues.map((clue, index) => {
       const group = Math.floor(index / 4);
-      return makeCoreSquare(group, clue);
+      return makeGridSquare(group, clue);
     });
-    setCoreSquares(coreSquares_);
+    setGridSquares(gridSquares_);
     setCluesEntered(true);
   }
 
 
   const clueSelected: (index: number) => void = (index) => {
     // Ignore squares that have already been solved.
-    if (cluesSetFromStart && !coreSquares[index].solvedGroup) {
+    if (cluesSetFromStart && !gridSquares[index].solvedGroup) {
 
-      let squares = [...coreSquares];
+      let squares = [...gridSquares];
       squares.forEach(s => s.badGuess = false);
       squares[index].selected = !squares[index].selected;
 
@@ -124,19 +124,19 @@ const App: FC<{}> = () => {
 
 
       localStorage!.set(squares);
-      setCoreSquares(squares);
+      setGridSquares(squares);
     }
   }
 
-  const hasBadGuess = Boolean(coreSquares.find(s => s.badGuess));
+  const hasBadGuess = Boolean(gridSquares.find(s => s.badGuess));
 
   const doClearGuess = () => {
-    let newSquares = [...coreSquares];
+    let newSquares = [...gridSquares];
     newSquares.forEach(s => {
       s.badGuess = false;
       s.selected = false;
     });
-    setCoreSquares(newSquares);
+    setGridSquares(newSquares);
   }
 
   const doRestart = () => {
@@ -146,7 +146,7 @@ const App: FC<{}> = () => {
 
   if (cluesSetFromStart) {
     return (<SolvingArea
-      coreSquares={coreSquares}
+      gridSquares={gridSquares}
       hasBadGuess={hasBadGuess}
       clueSelected={clueSelected}
       doClearGuess={doClearGuess}
@@ -155,13 +155,17 @@ const App: FC<{}> = () => {
   }
 
   const ResultArea = () => {
-    const shuffled = shuffleArray([...coreSquares]);
+    const shuffled = shuffleArray([...gridSquares]);
     const urlParams = makeUrlParams(shuffled);
     const url = window.location.href + "?" + urlParams.toString();
     return (
       <div>
-        <Wall coreSquares={coreSquares} />
-        <div> <a href={url} target="blank">Randomised (Playable)</a> </div>
+        <Wall gridSquares={gridSquares} />
+        <div>
+          <a href={url} target="blank">Randomised (Playable)</a>
+          {/* <span>Playable link: </span>
+          <a href={url} target="blank">{url}</a> */}
+        </div>
       </div>);
   }
 

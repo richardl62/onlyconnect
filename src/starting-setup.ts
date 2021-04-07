@@ -1,4 +1,4 @@
-import { CoreSquare, makeCoreSquare } from './core-square';
+import { GridSquare, makeGridSquare } from './core-square';
 import { nGroups, groupSize, nSquares } from './constants';
 import { makeSquares as makeSquaresFromURL } from './url-tools';
 import LocalStorage from "./local-storage";
@@ -7,7 +7,7 @@ function makeEmptySquares() {
   let squares = [];
   for (let groupNo = 0; groupNo < nGroups; ++groupNo) {
     for (let n = 0; n < groupSize; ++n) {
-      squares.push(makeCoreSquare(groupNo));
+      squares.push(makeGridSquare(groupNo));
     }
   }
 
@@ -25,7 +25,7 @@ function sanityCheckStoredSquares(
   return true;
 }
 
-type StartingSetup = [Array<CoreSquare>, boolean, LocalStorage | null];
+type StartingSetup = [Array<GridSquare>, boolean, LocalStorage | null];
 
 function getURLsquares() {
   try {
@@ -39,7 +39,7 @@ function getURLsquares() {
   return null;
 }
 
-function getLocalStorage(squares: Array<CoreSquare>): LocalStorage | null {
+function getLocalStorage(squares: Array<GridSquare>): LocalStorage | null {
   try {
     return LocalStorage.make(squares);
   } catch (err) {

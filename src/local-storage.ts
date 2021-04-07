@@ -1,4 +1,4 @@
-import { CoreSquare } from './core-square';
+import { GridSquare } from './core-square';
 
 
 class LocalStorage {
@@ -21,7 +21,7 @@ class LocalStorage {
     }
   }
 
-  static make(squares: Array<CoreSquare>) {
+  static make(squares: Array<GridSquare>) {
     const key = squares.map(sq => sq.clue).join();
     return new LocalStorage(key);
   }

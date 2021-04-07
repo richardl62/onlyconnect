@@ -1,9 +1,9 @@
-import { CoreSquare, makeCoreSquare } from './core-square';
+import { GridSquare, makeGridSquare } from './core-square';
 import {  nSquares, groupSize, nGroups } from './constants';
 import { DumbEncrypt } from './tools';
 
 
-function makeUrlParams(squares: Array<CoreSquare>) {
+function makeUrlParams(squares: Array<GridSquare>) {
 
   let urlParams = new URLSearchParams();
 
@@ -62,7 +62,7 @@ function unpackURLSolutionGroups(urlParams: URLSearchParams) {
   return values;
 }
 
-function makeSquares(urlParams: URLSearchParams) : Array<CoreSquare> | null {
+function makeSquares(urlParams: URLSearchParams) : Array<GridSquare> | null {
 
   const urlClues = unpackURLClues(urlParams);
   const urlSolutionGroups = unpackURLSolutionGroups(urlParams);
@@ -80,7 +80,7 @@ function makeSquares(urlParams: URLSearchParams) : Array<CoreSquare> | null {
   if (urlClues && urlSolutionGroups) {
     let squares = [];
     for (let i = 0; i < nSquares; ++i) {
-      squares.push(makeCoreSquare(urlSolutionGroups[i], urlClues[i]));
+      squares.push(makeGridSquare(urlSolutionGroups[i], urlClues[i]));
     }
     return squares;
   } else {

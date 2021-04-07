@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import {validSolvedGroup} from './constants';
 
-interface CoreSquare {
+interface GridSquare {
     clue: string;
     selected: boolean;
     badGuess: boolean;
@@ -9,12 +9,12 @@ interface CoreSquare {
 };
 
 interface SquareProps {
-    coreSquare: CoreSquare;
+    gridSquare: GridSquare;
     index: number;
     onSelect?: (index:number) => void;
 }
 
-const Square : FC<SquareProps> = ({coreSquare, index, onSelect}: SquareProps) => {
+const Square : FC<SquareProps> = ({gridSquare, index, onSelect}: SquareProps) => {
   
     const onClick: () => void = () => {
         if(onSelect)
@@ -22,19 +22,19 @@ const Square : FC<SquareProps> = ({coreSquare, index, onSelect}: SquareProps) =>
     };
 
     let className = "square";
-    if (coreSquare.selected) {
+    if (gridSquare.selected) {
         className += " selected";
     }
-    if (coreSquare.badGuess) {
+    if (gridSquare.badGuess) {
         className += " bad-guess";
     }
 
-    const solvedGroup = coreSquare.solvedGroup;
+    const solvedGroup = gridSquare.solvedGroup;
     if (solvedGroup !== null) {
         if(validSolvedGroup(solvedGroup)) {
-            className += " group" + coreSquare.solvedGroup;
+            className += " group" + gridSquare.solvedGroup;
         } else {
-            console.log("Invalid solved group for", coreSquare);
+            console.log("Invalid solved group for", gridSquare);
         }
     }
 
@@ -43,7 +43,7 @@ const Square : FC<SquareProps> = ({coreSquare, index, onSelect}: SquareProps) =>
             onClick={onClick}
             className={className}
         >
-            {coreSquare.clue}
+            {gridSquare.clue}
         </div>
     );
 
@@ -51,18 +51,18 @@ const Square : FC<SquareProps> = ({coreSquare, index, onSelect}: SquareProps) =>
 
 
 interface WallProps {
-    coreSquares: Array<CoreSquare>,
+    gridSquares: Array<GridSquare>,
     onSelect?: (index: number) => void,
 };
 
-const Wall: FC<WallProps> = ({ coreSquares, onSelect }: WallProps) => {
+const Wall: FC<WallProps> = ({ gridSquares, onSelect }: WallProps) => {
     return (
         <div className="wall">
-            {coreSquares.map((cs: CoreSquare, index: number) => (
+            {gridSquares.map((cs: GridSquare, index: number) => (
                 <Square 
                     key={index.toString()} 
                     index={index}
-                    coreSquare={cs}
+                    gridSquare={cs}
                     onSelect={onSelect}
                 />
             ))}
@@ -71,4 +71,4 @@ const Wall: FC<WallProps> = ({ coreSquares, onSelect }: WallProps) => {
 };
 
 export default Wall;
-export type { CoreSquare }
+export type { GridSquare }

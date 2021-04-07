@@ -9,7 +9,7 @@ function filterClue(clue: string) {
 
 
 // Warning: Change this interface is likely to break any recorded data
-interface CoreSquare {
+interface GridSquare {
   readonly answerGroup: number;
   clue: string;
   selected: boolean;
@@ -18,7 +18,7 @@ interface CoreSquare {
 }
 
 
-function makeCoreSquare(answerGroup: number, clue: string = "") : CoreSquare {
+function makeGridSquare(answerGroup: number, clue: string = "") : GridSquare {
   return {
     answerGroup: answerGroup,
     clue: filterClue(clue),
@@ -29,5 +29,5 @@ function makeCoreSquare(answerGroup: number, clue: string = "") : CoreSquare {
 }
 
 
-export type {CoreSquare};
-export {makeCoreSquare};
+export type {GridSquare};
+export {makeGridSquare};

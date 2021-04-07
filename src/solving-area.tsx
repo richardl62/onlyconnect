@@ -1,16 +1,16 @@
 import React from 'react';
-import Wall, { CoreSquare } from './wall'
+import Wall, { GridSquare } from './wall'
 
 
 interface SolvingAreaProps {
-    coreSquares: Array<CoreSquare>
+    gridSquares: Array<GridSquare>
     hasBadGuess: boolean;
     clueSelected: (index: number) => void,
     doClearGuess: ()=>void;
     doRestart: ()=>void;
 }
 
-function SolvingArea({coreSquares, hasBadGuess, clueSelected, doClearGuess, doRestart} : SolvingAreaProps) {
+function SolvingArea({gridSquares, hasBadGuess, clueSelected, doClearGuess, doRestart} : SolvingAreaProps) {
 
      const ClearGuessButton = () => (
         <button type="button" onClick={doClearGuess}>
@@ -26,7 +26,7 @@ function SolvingArea({coreSquares, hasBadGuess, clueSelected, doClearGuess, doRe
     return (
         <div className="solving-area">
             <Wall
-                coreSquares={coreSquares}
+                gridSquares={gridSquares}
                 onSelect={clueSelected}
             />
             <div className="solving-controls">
