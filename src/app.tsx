@@ -1,16 +1,11 @@
 // TO DO:  Tidy this code so it less of a dogs dinner.
 import React, { FC, useEffect, useState } from 'react';
-import { GridSquare, makeGridSquare } from './core-square';
-import { nGroups, groupSize } from './constants';
-import { shuffleArray } from './tools';
-
-import SolvingArea from './solving-area'
-import SettingArea from './setting-area'
-import Wall from './wall';
-
-import {makeUrlParams } from './url-tools';
+import { groupSize, nGroups } from './constants';
+import { GridSquare, makeGridSquare } from './grid-square';
+import GridAndLink from './grid-and-link';
+import SettingArea from './setting-area';
+import SolvingArea from './solving-area';
 import startingSetup from './starting-setup';
-
 import './App.css';
 
 function groupFromIndex(index: number) {
@@ -64,7 +59,7 @@ function positionSquaresInSolvedGroup(squares: Array<GridSquare>, groupNo: numbe
 
 const [startingSquares, cluesSetFromStart, localStorage ] = startingSetup();
 
-const App: FC<{}> = () => {
+const App: FC<{}> = (): JSX.Element => {
 
   const [gridSquares, setGridSquares] = useState(startingSquares);
   const [cluesEntered, setCluesEntered] = useState(false);
@@ -153,22 +148,6 @@ const App: FC<{}> = () => {
       doRestart={doRestart}
     />);
   }
-
-  const ResultArea = () => {
-    const shuffled = shuffleArray([...gridSquares]);
-    const urlParams = makeUrlParams(shuffled);
-    const url = window.location.href + "?" + urlParams.toString();
-    return (
-      <div>
-        <Wall gridSquares={gridSquares} />
-        <div>
-          <a href={url} target="blank">Randomised (Playable)</a>
-          {/* <span>Playable link: </span>
-          <a href={url} target="blank">{url}</a> */}
-        </div>
-      </div>);
-  }
-
   const recordClues = (clues: Array<string> | null) => {
     if (clues) {
       cluesSet(clues);
@@ -180,7 +159,7 @@ const App: FC<{}> = () => {
   return (
     <div className="setting-area">
       <SettingArea recordClues={recordClues} />
-      {cluesEntered ? <ResultArea /> : null}
+      {cluesEntered ? <GridAndLink gridSquares={gridSquares} /> : null}
     </div>
   )
 };

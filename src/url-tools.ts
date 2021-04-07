@@ -1,4 +1,4 @@
-import { GridSquare, makeGridSquare } from './core-square';
+import { GridSquare, makeGridSquare } from './grid-square';
 import {  nSquares, groupSize, nGroups } from './constants';
 import { DumbEncrypt } from './tools';
 

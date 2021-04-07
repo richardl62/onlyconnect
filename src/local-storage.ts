@@ -1,4 +1,4 @@
-import { GridSquare } from './core-square';
+import { GridSquare } from './grid-square';
 
 
 class LocalStorage {

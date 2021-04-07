@@ -7,7 +7,6 @@ function filterClue(clue: string) {
   return clue.replace(/~/g, "");
 }
 
-
 // Warning: Change this interface is likely to break any recorded data
 interface GridSquare {
   readonly answerGroup: number;
@@ -16,7 +15,6 @@ interface GridSquare {
   badGuess: boolean;
   solvedGroup: number | null;
 }
-
 
 function makeGridSquare(answerGroup: number, clue: string = "") : GridSquare {
   return {

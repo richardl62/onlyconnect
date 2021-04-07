@@ -1,4 +1,4 @@
-import { GridSquare, makeGridSquare } from './core-square';
+import { GridSquare, makeGridSquare } from './grid-square';
 import { nGroups, groupSize, nSquares } from './constants';
 import { makeSquares as makeSquaresFromURL } from './url-tools';
 import LocalStorage from "./local-storage";
